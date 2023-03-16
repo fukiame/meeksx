@@ -26,6 +26,7 @@ jobs:
             - name: Patch and build
               run: |
                   ./patchwork build
+                  find . -name "*releas*"
             - name: Upload a build artifact
               uses: actions/upload-artifact@v3
               with:
