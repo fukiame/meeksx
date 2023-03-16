@@ -6,7 +6,7 @@ Subject: [PATCH] cleaner ui
 oh hell naw
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 8beff08..408f4ba 100644
+index b9a662d..2b6950c 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -19,7 +19,7 @@ import android.graphics.BitmapFactory;
@@ -18,7 +18,7 @@ index 8beff08..408f4ba 100644
  import android.net.Uri;
  import android.net.wifi.SupplicantState;
  import android.net.wifi.WifiInfo;
-@@ -814,7 +814,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -815,7 +815,7 @@ public class MainActivity extends AppCompatActivity {
          if(logger==null) {
              logger=findViewById(R.id.logger);
          }
@@ -27,7 +27,7 @@ index 8beff08..408f4ba 100644
          if(b) {
              try {
                  int scrollAmount = logger.getLayout().getLineTop(logger.getLineCount()) - logger.getHeight();
-@@ -830,7 +830,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -831,7 +831,7 @@ public class MainActivity extends AppCompatActivity {
      }
  
      private void clearLog() {
@@ -36,7 +36,7 @@ index 8beff08..408f4ba 100644
          logger.setText(str);
          logger.scrollTo(0, 0);
      }
-@@ -873,7 +873,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -874,7 +874,7 @@ public class MainActivity extends AppCompatActivity {
              main_view.setVisibility(View.VISIBLE);
              qr_view.setVisibility(View.GONE);
              ImageView qr_view=findViewById(R.id.qr_img);
@@ -45,7 +45,7 @@ index 8beff08..408f4ba 100644
              scan_url.setText("Start ShareX First!");
          }
      }
-@@ -954,19 +954,25 @@ public class MainActivity extends AppCompatActivity {
+@@ -955,19 +955,25 @@ public class MainActivity extends AppCompatActivity {
          pListWriter.execute();
      }
  
@@ -71,7 +71,7 @@ index 8beff08..408f4ba 100644
  
      /* // meeksx - rid qr scanner
      private void initQrScanner() {
-@@ -1056,12 +1062,14 @@ public class MainActivity extends AppCompatActivity {
+@@ -1057,12 +1063,14 @@ public class MainActivity extends AppCompatActivity {
  
          @Override
          protected Void doInBackground(Void... voids) {
@@ -86,7 +86,7 @@ index 8beff08..408f4ba 100644
              com.github.sumimakito.awesomeqr.option.color.Color color=new com.github.sumimakito.awesomeqr.option.color.Color();
              color.setLight(Color.parseColor("#ffffff"));
              color.setDark(Color.parseColor("#000000"));
-@@ -1076,7 +1084,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -1077,7 +1085,7 @@ public class MainActivity extends AppCompatActivity {
              renderOption.setClearBorder(true);
              renderOption.setRoundedPatterns(true);
              renderOption.setColor(color);
@@ -95,7 +95,7 @@ index 8beff08..408f4ba 100644
              try {
                  RenderResult render = AwesomeQrRenderer.render(renderOption);
                  if (render.getBitmap() != null) {
-@@ -1132,7 +1140,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -1133,7 +1141,7 @@ public class MainActivity extends AppCompatActivity {
                          .setNegativeButton("Don't Allow", dialogClickListener)
                          .setNeutralButton("Always allow this device", dialogClickListener)
                          .setTitle("Request Confirmation")

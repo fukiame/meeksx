@@ -10,7 +10,7 @@ the built in logic already fall back to localhost in case of exceptions
 so i think this is safe
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 408f4ba..0639ee7 100644
+index 2b6950c..12d8536 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -21,9 +21,11 @@ import android.graphics.RectF;
@@ -43,7 +43,7 @@ index 408f4ba..0639ee7 100644
          } else {
              pushLog("Stopping server...",true);
              stopServer();
-@@ -788,12 +793,15 @@ public class MainActivity extends AppCompatActivity {
+@@ -789,12 +794,15 @@ public class MainActivity extends AppCompatActivity {
              stopServer();
              pushLog("Restarting server...", true);
              new Handler().postDelayed(() -> {
@@ -60,7 +60,7 @@ index 408f4ba..0639ee7 100644
              }, 2000);
          }
      }
-@@ -835,6 +843,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -836,6 +844,7 @@ public class MainActivity extends AppCompatActivity {
          logger.scrollTo(0, 0);
      }
  
@@ -68,7 +68,7 @@ index 408f4ba..0639ee7 100644
      private boolean isValidIP() {
          WifiApManager wifiApManager=new WifiApManager(getApplicationContext());
          return wifiApManager.isWifiApEnabled() || checkWifiOnAndConnected();
-@@ -850,6 +859,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -851,6 +860,7 @@ public class MainActivity extends AppCompatActivity {
              return false;
          }
      }

@@ -39,7 +39,7 @@ index 53ddf9a..da44cf9 100644
 \ No newline at end of file
 +</manifest>
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 3d72ef1..8beff08 100644
+index 3d72ef1..b9a662d 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -62,7 +62,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
@@ -116,7 +116,7 @@ index 3d72ef1..8beff08 100644
  
      public void requestStoragePermissions() {
          if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-@@ -586,11 +592,12 @@ public class MainActivity extends AppCompatActivity {
+@@ -586,10 +592,12 @@ public class MainActivity extends AppCompatActivity {
                  return;
              }
              initializeApp();
@@ -125,12 +125,11 @@ index 3d72ef1..8beff08 100644
              if(checkCameraPermission()) {
                  initQrScanner();
              }
--        }else{
-+        } */ /* meeksx end */ else{
++        */ // meeksx end
+         }else{
              super.onRequestPermissionsResult(requestCode, permissions, grantResults);
          }
-     }
-@@ -961,6 +968,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -961,6 +969,7 @@ public class MainActivity extends AppCompatActivity {
          }
      }
  
@@ -138,7 +137,7 @@ index 3d72ef1..8beff08 100644
      private void initQrScanner() {
          qrDialog.setContentView(R.layout.qr_scanner_layout);
          final QRCodeReaderView qrCodeReaderView=qrDialog.findViewById(R.id.qrdecoderview);
-@@ -991,6 +999,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -991,6 +1000,7 @@ public class MainActivity extends AppCompatActivity {
              }
          });
      }
