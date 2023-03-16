@@ -269,6 +269,40 @@ index f8e7ccc..0000000
 -      android:fillColor="#FFFFFFFF"
 -      android:pathData="M6.2,605c0,-12.2 9.9,-22.1 22.1,-22.1c12.2,0 22.1,9.9 22.1,22.1v64.6h64.6c12.2,0 22.1,9.9 22.1,22.1c0,12.2 -9.9,22.1 -22.1,22.1H28.2c-12.2,0 -22,-9.9 -22.1,-22.1V605zM7.6,691.6c0,11.4 9.2,20.6 20.6,20.6h86.6c11.4,0 20.6,-9.2 20.6,-20.6c0,-11.4 -9.2,-20.6 -20.6,-20.6h-66v-66c0,-11.4 -9.2,-20.6 -20.6,-20.6c-11.4,0 -20.6,9.2 -20.6,20.6V691.6C7.6,691.6 7.6,691.6 7.6,691.6z"/>
 -</vector>
+diff --git a/app/src/main/res/layout/qr_scanner_layout.xml b/app/src/main/res/layout/qr_scanner_layout.xml
+deleted file mode 100644
+index 275da16..0000000
+--- a/app/src/main/res/layout/qr_scanner_layout.xml
++++ /dev/null
+@@ -1,27 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="500dp">
+-
+-    <com.dlazaro66.qrcodereaderview.QRCodeReaderView
+-        android:id="@+id/qrdecoderview"
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
+-
+-    <com.akansh.fileserversuit.PointsOverlayLayout
+-        android:id="@+id/points_overlay_view"
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        />
+-
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
 diff --git a/app/src/main/res/menu/menu.xml b/app/src/main/res/menu/menu.xml
 index 3cfd198..3e683cf 100644
 --- a/app/src/main/res/menu/menu.xml
