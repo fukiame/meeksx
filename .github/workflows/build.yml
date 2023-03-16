@@ -5,7 +5,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                java: [8]
+                java: [11]
             fail-fast: true
         steps:
             - name: Checkout
@@ -30,4 +30,4 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 name: release apk cuz i dont have a pc cnat bulid
-                path: build/app/build/outputs/apk/release/app-release.apk
+                path: meeksx/build/app/build/outputs/apk/release/app-release.apk
