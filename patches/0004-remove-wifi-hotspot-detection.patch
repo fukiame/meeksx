@@ -1,0 +1,139 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 16 Mar 2023 13:03:26 +0000
+Subject: [PATCH] remove wifi / hotspot detection
+
+makes this thing compatible with ethernet and stuff
+sure we d miss out in case the user uses mobile data but eh
+
+the built in logic already fall back to localhost in case of exceptions
+so i think this is safe
+
+diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+index 989585a..4917145 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
++++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+@@ -21,9 +21,11 @@ import android.graphics.RectF;
+ import android.graphics.Typeface;
+ import android.graphics.drawable.TransitionDrawable;
+ import android.net.Uri;
++/* // meeksx - remove wifi detection
+ import android.net.wifi.SupplicantState;
+ import android.net.wifi.WifiInfo;
+ import android.net.wifi.WifiManager;
++*/ // meeksx end
+ import android.os.AsyncTask;
+ import android.os.Build;
+ import android.os.Bundle;
+@@ -408,13 +410,16 @@ public class MainActivity extends AppCompatActivity {
+         }
+         serverBtn.setOnClickListener(view -> {
+         if (!utils.isServiceRunning(ServerService.class)) {
+-            if(isValidIP()) {
++            // meeksx start - remove wifi detection
++            //if(isValidIP()) {
+                 pushLog("Starting server...", true);
+                 startServer();
+                 changeUI(Constants.SERVER_ON);
++            /*
+             }else{
+                 showSnackbar("Make sure your hotspot is open or wifi connected...");
+             }
++            */ // meeksx end
+         } else {
+             pushLog("Stopping server...",true);
+             stopServer();
+@@ -788,12 +793,15 @@ public class MainActivity extends AppCompatActivity {
+             stopServer();
+             pushLog("Restarting server...", true);
+             new Handler().postDelayed(() -> {
+-                if(isValidIP()) {
++                // meeksx start - remove wifi detection
++                //if(isValidIP()) {
+                     startServer();
+                     changeUI(Constants.SERVER_ON);
++                /*
+                 }else{
+                     showSnackbar("Make sure your hotspot is open or wifi connected...");
+                 }
++                */ // meeksx end
+             }, 2000);
+         }
+     }
+@@ -835,6 +843,7 @@ public class MainActivity extends AppCompatActivity {
+         logger.scrollTo(0, 0);
+     }
+ 
++    /* // meeksx - remove wifi detection
+     private boolean isValidIP() {
+         WifiApManager wifiApManager=new WifiApManager(getApplicationContext());
+         return wifiApManager.isWifiApEnabled() || checkWifiOnAndConnected();
+@@ -850,6 +859,7 @@ public class MainActivity extends AppCompatActivity {
+             return false;
+         }
+     }
++    */ // meeksx end
+ 
+     public void startServer() {
+         if(!utils.isServiceRunning(ServerService.class)) {
+diff --git a/app/src/main/java/com/akansh/fileserversuit/WifiApManager.java b/app/src/main/java/com/akansh/fileserversuit/WifiApManager.java
+deleted file mode 100644
+index 90c7fa9..0000000
+--- a/app/src/main/java/com/akansh/fileserversuit/WifiApManager.java
++++ /dev/null
+@@ -1,52 +0,0 @@
+-package com.akansh.fileserversuit;
+-
+-import android.content.Context;
+-import android.net.wifi.WifiManager;
+-
+-import java.lang.reflect.Method;
+-
+-public class WifiApManager {
+-    private final WifiManager mWifiManager;
+-
+-    public WifiApManager(Context context) {
+-        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+-    }
+-
+-    /*the following method is for getting the wifi hotspot state*/
+-
+-    public WIFI_AP_STATE getWifiApState() {
+-        try {
+-            Method method = mWifiManager.getClass().getMethod("getWifiApState");
+-
+-            int tmp = ((Integer) method.invoke(mWifiManager));
+-
+-            // Fix for Android 4
+-            if (tmp > 10) {
+-                tmp = tmp - 10;
+-            }
+-            return WIFI_AP_STATE.class.getEnumConstants()[tmp];
+-        } catch (Exception e) {
+-//            Log.e(this.getClass().toString(), "", e);
+-            return WIFI_AP_STATE.WIFI_AP_STATE_FAILED;
+-        }
+-    }
+-
+-    /**
+-     * Return whether Wi-Fi Hotspot is enabled or disabled.
+-     *
+-     * @return {@code true} if Wi-Fi AP is enabled
+-     * @see #getWifiApState()
+-     */
+-    public boolean isWifiApEnabled() {
+-        return getWifiApState() == WIFI_AP_STATE.WIFI_AP_STATE_ENABLED;
+-    }
+-
+-    public enum WIFI_AP_STATE {
+-        WIFI_AP_STATE_DISABLING,
+-        WIFI_AP_STATE_DISABLED,
+-        WIFI_AP_STATE_ENABLING,
+-        WIFI_AP_STATE_ENABLED,
+-        WIFI_AP_STATE_FAILED
+-    }
+-
+-}
+-- 
+2.30.2
+

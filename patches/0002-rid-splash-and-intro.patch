@@ -1,0 +1,352 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 16 Mar 2023 13:03:23 +0000
+Subject: [PATCH] rid splash and intro
+
+3 sec sleep? id rather have 0 startup delay-
+
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index da44cf9..05d91da 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -25,19 +25,17 @@
+         android:supportsRtl="true"
+         android:theme="@style/AppTheme"
+         tools:targetApi="r">
+-        <activity android:name=".IntroActivity" />
+         <activity android:name=".TransferHistory" />
+-        <activity android:name=".Splash"
+-            android:exported="true">
++        <activity
++            android:name=".MainActivity"
++            android:screenOrientation="portrait"
++            android:configChanges="keyboardHidden|orientation|screenSize"
++            android:exported="true" >
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
+-        <activity
+-            android:name=".MainActivity"
+-            android:screenOrientation="portrait"
+-            android:configChanges="keyboardHidden|orientation|screenSize" />
+ 
+         <service
+             android:name=".ServerService"
+diff --git a/app/src/main/java/com/akansh/fileserversuit/IntroActivity.java b/app/src/main/java/com/akansh/fileserversuit/IntroActivity.java
+deleted file mode 100644
+index e4eb2fa..0000000
+--- a/app/src/main/java/com/akansh/fileserversuit/IntroActivity.java
++++ /dev/null
+@@ -1,119 +0,0 @@
+-package com.akansh.fileserversuit;
+-
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.viewpager.widget.ViewPager;
+-
+-import android.content.Intent;
+-import android.graphics.Color;
+-import android.os.Build;
+-import android.os.Bundle;
+-import android.text.Html;
+-import android.view.View;
+-import android.view.Window;
+-import android.view.WindowManager;
+-import android.widget.LinearLayout;
+-import android.widget.TextView;
+-
+-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+-
+-public class IntroActivity extends AppCompatActivity {
+-
+-    private ViewPager viewPager;
+-    private LinearLayout layoutDot;
+-    private TextView[] dotstv;
+-    private int[] layouts;
+-    private FloatingActionButton btnNext;
+-    private FloatingActionButton btnPrev;
+-    private MyPagerAdapter myPagerAdapter;
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_intro);
+-
+-        viewPager = findViewById(R.id.viewPager);
+-        layoutDot = findViewById(R.id.dotLayout);
+-        btnNext = findViewById(R.id.btn_next);
+-        btnPrev = findViewById(R.id.btn_prev);
+-        setStatusBarTransparent();
+-
+-        btnNext.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View v) {
+-                int currentPage = viewPager.getCurrentItem()+1;
+-                if(currentPage<layouts.length) {
+-                    viewPager.setCurrentItem(currentPage);
+-                }else{
+-                    startMain();
+-                }
+-            }
+-        });
+-        btnPrev.setOnClickListener(v -> {
+-            int currentPage = viewPager.getCurrentItem()-1;
+-            if(currentPage>=0) {
+-                viewPager.setCurrentItem(currentPage);
+-            }
+-        });
+-        layouts = new int[]{R.layout.slider1,R.layout.slider2,R.layout.slider3,R.layout.slider4,R.layout.slider5,R.layout.slider6};
+-        myPagerAdapter=new MyPagerAdapter(layouts,getApplicationContext());
+-        viewPager.setAdapter(myPagerAdapter);
+-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+-            @Override
+-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+-
+-            }
+-
+-            @Override
+-            public void onPageSelected(int position) {
+-                if(position==layouts.length-1) {
+-                    btnNext.setImageResource(R.drawable.ic_check);
+-                }else{
+-                    btnNext.setImageResource(R.drawable.ic_arrow_right);
+-                }
+-                setDotStatus(position);
+-            }
+-
+-            @Override
+-            public void onPageScrollStateChanged(int state) {
+-
+-            }
+-        });
+-        setDotStatus(0);
+-
+-    }
+-
+-    private void setDotStatus(int page) {
+-        layoutDot.removeAllViews();
+-        dotstv = new TextView[layouts.length];
+-        for(int i=0; i<layouts.length; i++) {
+-            dotstv[i] = new TextView(this);
+-            dotstv[i].setText(Html.fromHtml("&#8226"));
+-            dotstv[i].setTextSize(30);
+-            dotstv[i].setTextColor(Color.parseColor("#a9b4bb"));
+-            layoutDot.addView(dotstv[i]);
+-        }
+-        if(dotstv.length>0) {
+-            dotstv[page].setTextColor(Color.parseColor("#ffffff"));
+-        }
+-        if(page==0) {
+-            btnPrev.setVisibility(View.INVISIBLE);
+-        }else{
+-            btnPrev.setVisibility(View.VISIBLE);
+-        }
+-    }
+-
+-    private void startMain() {
+-        Intent intent=new Intent(this,MainActivity.class);
+-        startActivity(intent);
+-        finish();
+-    }
+-
+-    private void setStatusBarTransparent() {
+-        if(Build.VERSION.SDK_INT >= 21) {
+-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+-            Window window=getWindow();
+-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+-            window.setStatusBarColor(Color.TRANSPARENT);
+-        }
+-    }
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/akansh/fileserversuit/Splash.java b/app/src/main/java/com/akansh/fileserversuit/Splash.java
+deleted file mode 100644
+index 5615d50..0000000
+--- a/app/src/main/java/com/akansh/fileserversuit/Splash.java
++++ /dev/null
+@@ -1,57 +0,0 @@
+-package com.akansh.fileserversuit;
+-
+-import androidx.appcompat.app.AppCompatActivity;
+-
+-import android.app.ActionBar;
+-import android.content.Intent;
+-import android.os.Build;
+-import android.os.Bundle;
+-import android.os.Handler;
+-import android.text.Html;
+-import android.view.View;
+-import android.widget.TextView;
+-
+-import java.io.File;
+-
+-public class Splash extends AppCompatActivity {
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_splash);
+-        TextView subText=findViewById(R.id.subtext);
+-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+-            subText.setText(Html.fromHtml("<font color=\"#ff9933\">HANDCRAFTED</font> IN <font color=\"#138808\">INDIA</font>",Html.FROM_HTML_MODE_COMPACT));
+-        }else{
+-            subText.setText(Html.fromHtml("<font color=\"#ff9933\">HANDCRAFTED</font> IN <font color=\"#138808\">INDIA</font>"));
+-        }
+-        try {
+-            View decorView = this.getWindow().getDecorView();
+-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LOW_PROFILE;
+-            decorView.setSystemUiVisibility(uiOptions);
+-            ActionBar actionBar = this.getActionBar();
+-            actionBar.hide();
+-        }catch (Exception e) {
+-            //Do Nothing
+-        }
+-        try {
+-            View decorView = this.getWindow().getDecorView();
+-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+-            decorView.setSystemUiVisibility(uiOptions);
+-        }catch (Exception e) {
+-            //Do Nothing
+-        }
+-        new Handler().postDelayed(() -> {
+-            Intent intent;
+-            Utils utils = new Utils(Splash.this);
+-            if(utils.loadSetting(Constants.APP_LOAD_F1)) {
+-                intent=new Intent(Splash.this,MainActivity.class);
+-            }else{
+-                intent=new Intent(Splash.this,IntroActivity.class);
+-                utils.saveSetting(Constants.APP_LOAD_F1,true);
+-            }
+-            startActivity(intent);
+-            finish();
+-        },3000);
+-    }
+-}
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/activity_intro.xml b/app/src/main/res/layout/activity_intro.xml
+deleted file mode 100644
+index 55e6cbf..0000000
+--- a/app/src/main/res/layout/activity_intro.xml
++++ /dev/null
+@@ -1,64 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    android:background="#FFFFFF"
+-    android:hapticFeedbackEnabled="false"
+-    tools:context=".IntroActivity">
+-
+-    <androidx.viewpager.widget.ViewPager
+-        android:id="@+id/viewPager"
+-        android:layout_width="0dp"
+-        android:layout_height="0dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent">
+-
+-    </androidx.viewpager.widget.ViewPager>
+-
+-    <LinearLayout
+-        android:id="@+id/dotLayout"
+-        android:layout_width="0dp"
+-        android:layout_height="30dp"
+-        android:gravity="center"
+-        android:orientation="horizontal"
+-        app:layout_constraintBottom_toBottomOf="@+id/btn_prev"
+-        app:layout_constraintEnd_toStartOf="@+id/btn_next"
+-        app:layout_constraintStart_toEndOf="@+id/btn_prev"
+-        app:layout_constraintTop_toTopOf="@+id/btn_prev"></LinearLayout>
+-
+-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+-        android:id="@+id/btn_prev"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_marginStart="16dp"
+-        android:layout_marginBottom="16dp"
+-        android:clickable="true"
+-        app:backgroundTint="#00FFFFFF"
+-        app:borderWidth="0dp"
+-        app:elevation="0dp"
+-        app:hoveredFocusedTranslationZ="0dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:pressedTranslationZ="0dp"
+-        app:rippleColor="#000000"
+-        app:srcCompat="@drawable/ic_arrow_left"
+-        tools:ignore="VectorDrawableCompat" />
+-
+-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+-        android:id="@+id/btn_next"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_marginEnd="16dp"
+-        android:layout_marginBottom="16dp"
+-        android:clickable="true"
+-        app:backgroundTint="@color/colorAccent"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:srcCompat="@drawable/ic_arrow_right"
+-        tools:ignore="VectorDrawableCompat" />
+-
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/activity_splash.xml b/app/src/main/res/layout/activity_splash.xml
+deleted file mode 100644
+index c042d5a..0000000
+--- a/app/src/main/res/layout/activity_splash.xml
++++ /dev/null
+@@ -1,45 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    android:background="#0C0C0C"
+-    tools:context=".Splash">
+-
+-    <ImageView
+-        android:id="@+id/imageView2"
+-        android:layout_width="250dp"
+-        android:layout_height="250dp"
+-        android:layout_marginBottom="54dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:srcCompat="@drawable/ic_logo" />
+-
+-    <TextView
+-        android:id="@+id/textView2"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_marginTop="8dp"
+-        android:fontFamily="@font/product_sans"
+-        android:text="@string/app_name"
+-        android:textColor="#FFFFFF"
+-        android:textSize="24sp"
+-        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+-        app:layout_constraintStart_toStartOf="@+id/imageView2"
+-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+-
+-    <TextView
+-        android:id="@+id/subtext"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_marginTop="8dp"
+-        android:fontFamily="@font/product_sans"
+-        android:textColor="#FFFFFF"
+-        android:textSize="14sp"
+-        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+-        app:layout_constraintStart_toStartOf="@+id/imageView2"
+-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+-- 
+2.30.2
+
