@@ -10,12 +10,12 @@ the built in logic already fall back to localhost in case of exceptions
 so i think this is safe
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 989585a..4917145 100644
+index 408f4ba..0639ee7 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -21,9 +21,11 @@ import android.graphics.RectF;
  import android.graphics.Typeface;
- import android.graphics.drawable.TransitionDrawable;
+ //import android.graphics.drawable.TransitionDrawable; // meeksx - clean bg
  import android.net.Uri;
 +/* // meeksx - remove wifi detection
  import android.net.wifi.SupplicantState;

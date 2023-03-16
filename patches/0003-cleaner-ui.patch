@@ -6,9 +6,18 @@ Subject: [PATCH] cleaner ui
 oh hell naw
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 8beff08..989585a 100644
+index 8beff08..408f4ba 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+@@ -19,7 +19,7 @@ import android.graphics.BitmapFactory;
+ import android.graphics.Color;
+ import android.graphics.RectF;
+ import android.graphics.Typeface;
+-import android.graphics.drawable.TransitionDrawable;
++//import android.graphics.drawable.TransitionDrawable; // meeksx - clean bg
+ import android.net.Uri;
+ import android.net.wifi.SupplicantState;
+ import android.net.wifi.WifiInfo;
 @@ -814,7 +814,7 @@ public class MainActivity extends AppCompatActivity {
          if(logger==null) {
              logger=findViewById(R.id.logger);
@@ -15070,6 +15079,51 @@ ztO!{8>J5f50>1oWkHgm7)C`L3s&!|n0~)PDt&Gbo1yKZDd7F0=9W`;H1su#%w!f7M
 zeG=Y=bmR9<n_Zk(s22THRlJE_S-1sQ=dq-Yxa+b(!||jktB&_JVT6Yo)pb-_FI6w8
 i_7abK<h)&+t=mK8ew7`*-eVQ}Z;oT|KRJ%S5dQ+hCJ#vf
 
+diff --git a/app/src/main/res/drawable/trans_off_to_on.xml b/app/src/main/res/drawable/trans_off_to_on.xml
+deleted file mode 100644
+index 0fb8392..0000000
+--- a/app/src/main/res/drawable/trans_off_to_on.xml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<transition xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:drawable="@drawable/bg_green" />
+-    <item android:drawable="@drawable/bg_red" />
+-</transition>
+\ No newline at end of file
+diff --git a/app/src/main/res/drawable/trans_on_to_off.xml b/app/src/main/res/drawable/trans_on_to_off.xml
+deleted file mode 100644
+index e0167ec..0000000
+--- a/app/src/main/res/drawable/trans_on_to_off.xml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<transition xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:drawable="@drawable/bg_red" />
+-    <item android:drawable="@drawable/bg_green" />
+-</transition>
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/drawer_header.xml b/app/src/main/res/layout/drawer_header.xml
+index 560ad45..adc7f2e 100644
+--- a/app/src/main/res/layout/drawer_header.xml
++++ b/app/src/main/res/layout/drawer_header.xml
+@@ -23,8 +23,7 @@
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+-            app:layout_constraintTop_toTopOf="parent"
+-            app:srcCompat="@drawable/bg_green" />
++            app:layout_constraintTop_toTopOf="parent" />
+ 
+         <ImageView
+             android:id="@+id/imageView2"
+@@ -92,4 +91,4 @@
+ 
+     </androidx.constraintlayout.widget.ConstraintLayout>
+ 
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++</androidx.constraintlayout.widget.ConstraintLayout>
 diff --git a/app/src/main/res/layout/main_view.xml b/app/src/main/res/layout/main_view.xml
 index 0444622..a8a6078 100644
 --- a/app/src/main/res/layout/main_view.xml
