@@ -26,9 +26,8 @@ jobs:
             - name: Patch and build
               run: |
                   ./patchwork build
-                  find . -name "*releas*"
             - name: Upload a build artifact
               uses: actions/upload-artifact@v3
               with:
                 name: release apk cuz i dont have a pc cnat bulid
-                path: build/app/build/outputs/apk/release/app-release.apk
+                path: ./meeksx/app/build/outputs/apk/release/*
