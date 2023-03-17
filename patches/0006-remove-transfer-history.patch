@@ -8,10 +8,10 @@ Subject: [PATCH] remove transfer history
 - the log exista
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 12d8536..f4205d7 100644
+index 9d49663..a64b76f 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-@@ -498,9 +498,11 @@ public class MainActivity extends AppCompatActivity {
+@@ -500,9 +500,11 @@ public class MainActivity extends AppCompatActivity {
                      requestCameraPermission();
                  }
              */ // meeksx end

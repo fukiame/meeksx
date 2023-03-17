@@ -6,7 +6,7 @@ Subject: [PATCH] cleaner ui
 oh hell naw
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index b9a662d..2b6950c 100644
+index b9a662d..45bf600 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -19,7 +19,7 @@ import android.graphics.BitmapFactory;
@@ -18,7 +18,27 @@ index b9a662d..2b6950c 100644
  import android.net.Uri;
  import android.net.wifi.SupplicantState;
  import android.net.wifi.WifiInfo;
-@@ -815,7 +815,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
+     private TextView logger;
+     private TextView scan_url;
+ 
+-    private ImageView main_bg,second_bg;
++    //private ImageView main_bg,second_bg; // meeksx - clean bg
+     BroadcastReceiver updateUIReciver;
+     List<String> pmode_send_images = new ArrayList<>(), pmode_send_files = new ArrayList<>(), pmode_send_final_files = new ArrayList<>();
+     ThemesData themesData = new ThemesData();
+@@ -141,8 +141,10 @@ public class MainActivity extends AppCompatActivity {
+         settings_view.setVisibility(View.GONE);
+         main_view.setVisibility(View.VISIBLE);
+         qr_view.setVisibility(View.GONE);
++	/* // meeksx - clean bg
+         main_bg = findViewById(R.id.main_bg);
+         second_bg = findViewById(R.id.second_bg);
++	*/ // meeksx end
+         scan_url = findViewById(R.id.scan_url);
+         drawerLayout = findViewById(R.id.root_container);
+ 
+@@ -815,7 +817,7 @@ public class MainActivity extends AppCompatActivity {
          if(logger==null) {
              logger=findViewById(R.id.logger);
          }
@@ -27,7 +47,7 @@ index b9a662d..2b6950c 100644
          if(b) {
              try {
                  int scrollAmount = logger.getLayout().getLineTop(logger.getLineCount()) - logger.getHeight();
-@@ -831,7 +831,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -831,7 +833,7 @@ public class MainActivity extends AppCompatActivity {
      }
  
      private void clearLog() {
@@ -36,7 +56,7 @@ index b9a662d..2b6950c 100644
          logger.setText(str);
          logger.scrollTo(0, 0);
      }
-@@ -874,7 +874,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -874,7 +876,7 @@ public class MainActivity extends AppCompatActivity {
              main_view.setVisibility(View.VISIBLE);
              qr_view.setVisibility(View.GONE);
              ImageView qr_view=findViewById(R.id.qr_img);
@@ -45,7 +65,7 @@ index b9a662d..2b6950c 100644
              scan_url.setText("Start ShareX First!");
          }
      }
-@@ -955,19 +955,25 @@ public class MainActivity extends AppCompatActivity {
+@@ -955,19 +957,25 @@ public class MainActivity extends AppCompatActivity {
          pListWriter.execute();
      }
  
@@ -71,7 +91,7 @@ index b9a662d..2b6950c 100644
  
      /* // meeksx - rid qr scanner
      private void initQrScanner() {
-@@ -1057,12 +1063,14 @@ public class MainActivity extends AppCompatActivity {
+@@ -1057,12 +1065,14 @@ public class MainActivity extends AppCompatActivity {
  
          @Override
          protected Void doInBackground(Void... voids) {
@@ -86,7 +106,7 @@ index b9a662d..2b6950c 100644
              com.github.sumimakito.awesomeqr.option.color.Color color=new com.github.sumimakito.awesomeqr.option.color.Color();
              color.setLight(Color.parseColor("#ffffff"));
              color.setDark(Color.parseColor("#000000"));
-@@ -1077,7 +1085,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -1077,7 +1087,7 @@ public class MainActivity extends AppCompatActivity {
              renderOption.setClearBorder(true);
              renderOption.setRoundedPatterns(true);
              renderOption.setColor(color);
@@ -95,7 +115,7 @@ index b9a662d..2b6950c 100644
              try {
                  RenderResult render = AwesomeQrRenderer.render(renderOption);
                  if (render.getBitmap() != null) {
-@@ -1133,7 +1141,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -1133,7 +1143,7 @@ public class MainActivity extends AppCompatActivity {
                          .setNegativeButton("Don't Allow", dialogClickListener)
                          .setNeutralButton("Always allow this device", dialogClickListener)
                          .setTitle("Request Confirmation")

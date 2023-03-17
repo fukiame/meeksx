@@ -10,7 +10,7 @@ the built in logic already fall back to localhost in case of exceptions
 so i think this is safe
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index 2b6950c..12d8536 100644
+index 45bf600..9d49663 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -21,9 +21,11 @@ import android.graphics.RectF;
@@ -25,7 +25,7 @@ index 2b6950c..12d8536 100644
  import android.os.AsyncTask;
  import android.os.Build;
  import android.os.Bundle;
-@@ -408,13 +410,16 @@ public class MainActivity extends AppCompatActivity {
+@@ -410,13 +412,16 @@ public class MainActivity extends AppCompatActivity {
          }
          serverBtn.setOnClickListener(view -> {
          if (!utils.isServiceRunning(ServerService.class)) {
@@ -43,7 +43,7 @@ index 2b6950c..12d8536 100644
          } else {
              pushLog("Stopping server...",true);
              stopServer();
-@@ -789,12 +794,15 @@ public class MainActivity extends AppCompatActivity {
+@@ -791,12 +796,15 @@ public class MainActivity extends AppCompatActivity {
              stopServer();
              pushLog("Restarting server...", true);
              new Handler().postDelayed(() -> {
@@ -60,7 +60,7 @@ index 2b6950c..12d8536 100644
              }, 2000);
          }
      }
-@@ -836,6 +844,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -838,6 +846,7 @@ public class MainActivity extends AppCompatActivity {
          logger.scrollTo(0, 0);
      }
  
@@ -68,7 +68,7 @@ index 2b6950c..12d8536 100644
      private boolean isValidIP() {
          WifiApManager wifiApManager=new WifiApManager(getApplicationContext());
          return wifiApManager.isWifiApEnabled() || checkWifiOnAndConnected();
-@@ -851,6 +860,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -853,6 +862,7 @@ public class MainActivity extends AppCompatActivity {
              return false;
          }
      }
