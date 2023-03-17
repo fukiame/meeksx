@@ -390,7 +390,7 @@ index 9402f8b..0000000
 -}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/akansh/fileserversuit/WebServer.java b/app/src/main/java/com/akansh/fileserversuit/WebServer.java
-index 0600fe4..303a87f 100644
+index 0600fe4..e9b6cb0 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/WebServer.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/WebServer.java
 @@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
@@ -429,7 +429,31 @@ index 0600fe4..303a87f 100644
      }
  
      public void setRoot(String root) {
-@@ -146,7 +146,7 @@ public class WebServer extends NanoHTTPD {
+@@ -87,17 +87,19 @@ public class WebServer extends NanoHTTPD {
+                     String loc = root + Objects.requireNonNull(params.get("location")).get(0);
+                     File f=new File(loc);
+                     sendLog("msg","msg","Sending file: "+f.getName());
++		    // meeksx start - rid history
+                     if(utils.loadSetting(Constants.FORCE_DOWNLOAD)) {
+-                        return serverUtils.downloadFile(loc,true,true,range);
++                        return serverUtils.downloadFile(loc,true,/*true,*/ range);
+                     }else{
+-                        return serverUtils.serveFile(loc,true,range);
++                        return serverUtils.serveFile(loc,/*true,*/range);
+                     }
+                 }else if(action.equals("viewImage")) {
+                     String loc=root+ Objects.requireNonNull(params.get("location")).get(0);
+-                    return serverUtils.serveFile(loc,false,range);
++                    return serverUtils.serveFile(loc,/*false,*/range);
+                 }else if(action.equals("thumbImage")) {
+                     String loc= Objects.requireNonNull(params.get("location")).get(0);
+-                    return serverUtils.serveFile(loc,false,range);
++                    return serverUtils.serveFile(loc,/*false,*/range);
++		    // meeksx end
+                 }else if(action.equals("delFiles")) {
+                     if(!utils.loadSetting(Constants.RESTRICT_MODIFY) && !utils.loadSetting(Constants.PRIVATE_MODE)) {
+                         JSONArray jsonArray = new JSONArray(Objects.requireNonNull(params.get("data")).get(0));
+@@ -146,7 +148,7 @@ public class WebServer extends NanoHTTPD {
                                      file = new File(jsonArray.getString(i));
                                  }
                                  if (file.exists()) {
@@ -438,7 +462,20 @@ index 0600fe4..303a87f 100644
                                      filesList.add(file);
                                  }
                              }
-@@ -252,7 +252,7 @@ public class WebServer extends NanoHTTPD {
+@@ -158,10 +160,10 @@ public class WebServer extends NanoHTTPD {
+                         }
+                         sendLog("msg", "msg", "Zipping completed...");
+                         sendLog("msg", "msg", "Sending zip file...");
+-                        return serverUtils.downloadFile(loc,false,false, range);
++                        return serverUtils.downloadFile(loc,false,/*false,*/ range); // meeksx - rid history
+                     }else{
+                         sendLog("msg", "msg", "Sending "+f.getName()+" to download...");
+-                        return serverUtils.downloadFile(f.getAbsolutePath(),true,true, range);
++                        return serverUtils.downloadFile(f.getAbsolutePath(),true,/*true,*/ range); // meeksx - rid history
+                     }
+                 }else if(action.equals("renF")) {
+                     if(!utils.loadSetting(Constants.RESTRICT_MODIFY) && !utils.loadSetting(Constants.PRIVATE_MODE)) {
+@@ -252,7 +254,7 @@ public class WebServer extends NanoHTTPD {
                                  } else if (mime.startsWith("video")) {
                                      utils.verifyVideo(received);
                                  }
@@ -447,7 +484,7 @@ index 0600fe4..303a87f 100644
                                  sendLog("msg", "msg", "File received: " + fileName);
                                  len++;
                              }
-@@ -315,6 +315,7 @@ public class WebServer extends NanoHTTPD {
+@@ -315,6 +317,7 @@ public class WebServer extends NanoHTTPD {
          ctx.sendBroadcast(local);
      }
  
@@ -455,7 +492,7 @@ index 0600fe4..303a87f 100644
      public void pushHistory(File f,int itemType) {
          Calendar c = Calendar.getInstance();
          SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-@@ -325,4 +326,5 @@ public class WebServer extends NanoHTTPD {
+@@ -325,4 +328,5 @@ public class WebServer extends NanoHTTPD {
          }
          historyDBManager.addTransferHistory(itemType,f.getName(),serverUtils.fileSize(f),df.format(c.getTime()),tf.format(c.getTime()),mime,f.getAbsolutePath());
      }
