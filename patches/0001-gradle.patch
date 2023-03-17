@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 17 Mar 2023 05:41:27 +0000
+Subject: [PATCH] gradle
+
+
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+index b0277a7..62701eb 100644
+--- a/gradle/wrapper/gradle-wrapper.properties
++++ b/gradle/wrapper/gradle-wrapper.properties
+@@ -3,4 +3,4 @@ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-7.6.1-bin.zip
+diff --git a/gradlew b/gradlew
+old mode 100644
+new mode 100755
+-- 
+2.30.2
+

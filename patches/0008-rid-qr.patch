@@ -1,0 +1,469 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 17 Mar 2023 05:37:16 +0000
+Subject: [PATCH] rid qr
+
+pruh
+
+diff --git a/app/build.gradle b/app/build.gradle
+index c5dec64..ee5a3be 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -79,8 +79,8 @@ dependencies {
+     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.0'
+     implementation 'com.google.android.material:material:1.8.0'
+     //implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3' // meeksx - rid qr scanner
+-    implementation 'com.google.zxing:core:3.5.1'
+-    implementation 'com.github.SumiMakito:AwesomeQRCode:1.2.0'
++    //implementation 'com.google.zxing:core:3.5.1'
++    //implementation 'com.github.SumiMakito:AwesomeQRCode:1.2.0'
+ 
+     testImplementation 'junit:junit:4.13.2'
+     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+index f4205d7..bcbe056 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
++++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+@@ -65,15 +65,17 @@ import com.developer.filepicker.model.DialogConfigs;
+ import com.developer.filepicker.model.DialogProperties;
+ import com.developer.filepicker.view.FilePickerDialog;
+ //import com.dlazaro66.qrcodereaderview.QRCodeReaderView; // meeksx - rid qr scanner
++/* // meeksx - rid qr
+ import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
+ import com.github.sumimakito.awesomeqr.RenderResult;
+ import com.github.sumimakito.awesomeqr.option.RenderOption;
+ import com.github.sumimakito.awesomeqr.option.logo.Logo;
++*/ // meeksx end
+ import com.google.android.material.floatingactionbutton.FloatingActionButton;
+ import com.google.android.material.navigation.NavigationView;
+ import com.google.android.material.snackbar.Snackbar;
+ import com.google.android.material.textfield.TextInputLayout;
+-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
++//import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel; // meeksx - rid qr
+ import com.zhihu.matisse.Matisse;
+ import com.zhihu.matisse.MimeType;
+ 
+@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
+ 
+     private ProgressDialog progress;
+     private String serverRoot = null;
+-    private ConstraintLayout settings_view, main_view, qr_view, logger_wrapper;
++    private ConstraintLayout settings_view, main_view, /*qr_view,*/ logger_wrapper; // meeksx - rid qr
+     private TextView settDRoot, settRemDev, settTheme;
+     private TextView logger;
+     private TextView scan_url;
+@@ -139,10 +141,10 @@ public class MainActivity extends AppCompatActivity {
+         serverBtn = findViewById(R.id.serverBtn);
+         settings_view = findViewById(R.id.settings_view);
+         main_view = findViewById(R.id.main_view);
+-        qr_view = findViewById(R.id.qr_view);
++        //qr_view = findViewById(R.id.qr_view); // meeksx - rid qr
+         settings_view.setVisibility(View.GONE);
+         main_view.setVisibility(View.VISIBLE);
+-        qr_view.setVisibility(View.GONE);
++        //qr_view.setVisibility(View.GONE); // meeksx - rid qr
+         main_bg = findViewById(R.id.main_bg);
+         second_bg = findViewById(R.id.second_bg);
+         scan_url = findViewById(R.id.scan_url);
+@@ -230,8 +232,10 @@ public class MainActivity extends AppCompatActivity {
+             }
+         };
+         registerReceiver(updateUIReciver, filter);
++	/* // meeksx - rid qr
+         FloatingActionButton qrBtn = findViewById(R.id.qrBtn);
+         qrBtn.setOnClickListener(v -> toggleQRView());
++	*/ // meeksx end
+         hide_logger_btn.setOnClickListener(v -> {
+             toggleLogger();
+         });
+@@ -337,8 +341,10 @@ public class MainActivity extends AppCompatActivity {
+     public void onBackPressed() {
+         if(settings_view.getVisibility()==View.VISIBLE) {
+             toggleSettings();
++	/* // meeksx - rid qr
+         }else if(qr_view.getVisibility()==View.VISIBLE) {
+             toggleQRView();
++	*/ // meeksx end
+         }else{
+             exit();
+         }
+@@ -780,7 +786,7 @@ public class MainActivity extends AppCompatActivity {
+     }
+ 
+     private void toggleSettings() {
+-        qr_view.setVisibility(View.GONE);
++        //qr_view.setVisibility(View.GONE); // meeksx - rid qr
+         if(settings_view.getVisibility()==View.GONE) {
+             settings_view.setVisibility(View.VISIBLE);
+             main_view.setVisibility(View.GONE);
+@@ -871,6 +877,7 @@ public class MainActivity extends AppCompatActivity {
+         }
+     }
+ 
++    /* //meeksx - rid qr
+     public void toggleQRView() {
+         if(qr_view.getVisibility()==View.GONE) {
+             main_view.setVisibility(View.GONE);
+@@ -890,6 +897,7 @@ public class MainActivity extends AppCompatActivity {
+             scan_url.setText("Start ShareX First!");
+         }
+     }
++    */ // meeksx end
+ 
+     public void showAbout() {
+         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+@@ -1065,6 +1073,7 @@ public class MainActivity extends AppCompatActivity {
+         }
+     }
+ 
++    /* // meeksx - rid qr
+     public class GenerateQR extends AsyncTask<Void,Void,Void> {
+ 
+         ImageView qr_view;
+@@ -1082,7 +1091,7 @@ public class MainActivity extends AppCompatActivity {
+             logo.setBorderWidth(10);
+             logo.setScale(0.2f);
+             logo.setClippingRect(new RectF(0, 0, 200, 200));
+-	    */ // meeksx end
++	    *\meeksx\/ // meeksx end
+             com.github.sumimakito.awesomeqr.option.color.Color color=new com.github.sumimakito.awesomeqr.option.color.Color();
+             color.setLight(Color.parseColor("#ffffff"));
+             color.setDark(Color.parseColor("#000000"));
+@@ -1113,6 +1122,7 @@ public class MainActivity extends AppCompatActivity {
+             return null;
+         }
+     }
++    */ // meeksx end
+ 
+     public void showSnackbar(String msg) {
+         DrawerLayout drawerLayout=findViewById(R.id.root_container);
+diff --git a/app/src/main/res/drawable/qr_code.xml b/app/src/main/res/drawable/qr_code.xml
+deleted file mode 100644
+index 35e4327..0000000
+--- a/app/src/main/res/drawable/qr_code.xml
++++ /dev/null
+@@ -1,99 +0,0 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="512dp"
+-    android:height="512dp"
+-    android:viewportWidth="512"
+-    android:viewportHeight="512">
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M217.043,0H16.696C7.475,0 0,7.475 0,16.696v200.348c0,9.22 7.475,16.696 16.696,16.696h200.348c9.22,0 16.696,-7.475 16.696,-16.696V16.696C233.739,7.475 226.264,0 217.043,0zM200.348,200.348H33.391V33.391h166.957V200.348z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M150.261,66.783H83.478c-9.22,0 -16.696,7.475 -16.696,16.696v66.783c0,9.22 7.475,16.696 16.696,16.696h66.783c9.22,0 16.696,-7.475 16.696,-16.696V83.478C166.957,74.258 159.481,66.783 150.261,66.783zM133.565,133.565h-33.391v-33.391h33.391V133.565z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M495.304,0H294.957c-9.22,0 -16.696,7.475 -16.696,16.696v200.348c0,9.22 7.475,16.696 16.696,16.696h200.348c9.22,0 16.696,-7.475 16.696,-16.696V16.696C512,7.475 504.525,0 495.304,0zM478.609,200.348H311.652V33.391h166.957V200.348z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M428.522,66.783h-66.783c-9.22,0 -16.696,7.475 -16.696,16.696v66.783c0,9.22 7.475,16.696 16.696,16.696h66.783c9.22,0 16.696,-7.475 16.696,-16.696V83.478C445.217,74.258 437.742,66.783 428.522,66.783zM411.826,133.565h-33.391v-33.391h33.391V133.565z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M217.043,278.261H16.696C7.475,278.261 0,285.736 0,294.957v200.348C0,504.525 7.475,512 16.696,512h200.348c9.22,0 16.696,-7.475 16.696,-16.696V294.957C233.739,285.736 226.264,278.261 217.043,278.261zM200.348,478.609H33.391V311.652h166.957V478.609z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M150.261,345.043H83.478c-9.22,0 -16.696,7.475 -16.696,16.696v66.783c0,9.22 7.475,16.696 16.696,16.696h66.783c9.22,0 16.696,-7.475 16.696,-16.696v-66.783C166.957,352.519 159.481,345.043 150.261,345.043zM133.565,411.826h-33.391v-33.391h33.391V411.826z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M278.261,278.261h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M278.261,345.043h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M278.261,411.826h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M311.652,311.652h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M311.652,378.435h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M311.652,445.217h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M345.043,278.261h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M345.043,345.043h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M345.043,411.826h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M378.435,311.652h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M378.435,378.435h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M378.435,445.217h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M411.826,278.261h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M411.826,345.043h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M411.826,411.826h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M445.217,311.652h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M445.217,378.435h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M445.217,445.217h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M278.261,478.609h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M345.043,478.609h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M411.826,478.609h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M478.609,278.261h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M478.609,345.043h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M478.609,411.826h33.391v33.391h-33.391z"/>
+-  <path
+-      android:fillColor="#FFFFFFFF"
+-      android:pathData="M478.609,478.609h33.391v33.391h-33.391z"/>
+-</vector>
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+index 1828d92..8e8c4dd 100644
+--- a/app/src/main/res/layout/activity_main.xml
++++ b/app/src/main/res/layout/activity_main.xml
+@@ -57,6 +57,7 @@
+                 app:layout_constraintTop_toTopOf="parent" />
+         </androidx.constraintlayout.widget.ConstraintLayout>
+ 
++	<!-- meeksx - rid qr --> <!--
+         <androidx.constraintlayout.widget.ConstraintLayout
+             android:id="@+id/qr_view"
+             android:layout_width="0dp"
+@@ -77,6 +78,7 @@
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toTopOf="parent" />
+         </androidx.constraintlayout.widget.ConstraintLayout>
++	-->
+ 
+     </androidx.constraintlayout.widget.ConstraintLayout>
+ 
+@@ -92,4 +94,4 @@
+         app:itemTextColor="@color/txt_color"
+         app:menu="@menu/menu" />
+ 
+-</androidx.drawerlayout.widget.DrawerLayout>
+\ No newline at end of file
++</androidx.drawerlayout.widget.DrawerLayout>
+diff --git a/app/src/main/res/layout/main_view.xml b/app/src/main/res/layout/main_view.xml
+index 8305f17..9f3aea2 100644
+--- a/app/src/main/res/layout/main_view.xml
++++ b/app/src/main/res/layout/main_view.xml
+@@ -114,6 +114,7 @@
+ 
+     </androidx.constraintlayout.widget.ConstraintLayout>
+ 
++    <!-- meeksx - rid qr --><!--
+     <com.google.android.material.floatingactionbutton.FloatingActionButton
+         android:id="@+id/qrBtn"
+         android:layout_width="wrap_content"
+@@ -128,6 +129,7 @@
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/serverBtn"
+         app:srcCompat="@drawable/qr_code" />
++    -->
+ 
+     <ImageButton
+         android:id="@+id/nav_btn"
+diff --git a/app/src/main/res/layout/qr_view.xml b/app/src/main/res/layout/qr_view.xml
+deleted file mode 100644
+index 2caebca..0000000
+--- a/app/src/main/res/layout/qr_view.xml
++++ /dev/null
+@@ -1,147 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    android:background="@drawable/ripple_bg">
+-
+-    <ImageView
+-        android:id="@+id/second_bg"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:foreground="@color/transparent_mask_2"
+-        android:scaleType="centerCrop"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
+-
+-    <androidx.cardview.widget.CardView
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_marginStart="8dp"
+-        android:layout_marginTop="8dp"
+-        android:layout_marginEnd="8dp"
+-        android:layout_marginBottom="8dp"
+-        app:cardBackgroundColor="@color/bg_color"
+-        app:cardCornerRadius="5dp"
+-        app:cardElevation="5dp"
+-        app:contentPadding="10dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent">
+-
+-        <androidx.constraintlayout.widget.ConstraintLayout
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent">
+-
+-            <ImageView
+-                android:id="@+id/qr_img"
+-                android:layout_width="200dp"
+-                android:layout_height="200dp"
+-                android:layout_marginStart="8dp"
+-                android:layout_marginTop="16dp"
+-                android:layout_marginEnd="8dp"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toTopOf="parent"
+-                app:srcCompat="@drawable/ic_logo"
+-                tools:visibility="visible" />
+-
+-            <androidx.constraintlayout.widget.ConstraintLayout
+-                android:layout_width="match_parent"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="8dp"
+-                android:layout_marginTop="16dp"
+-                android:layout_marginEnd="8dp"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@+id/qr_img">
+-
+-                <androidx.constraintlayout.widget.ConstraintLayout
+-                    android:id="@+id/constraintLayout"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:layout_marginStart="8dp"
+-                    android:layout_marginEnd="8dp"
+-                    android:background="@drawable/url_box"
+-                    app:layout_constraintEnd_toEndOf="parent"
+-                    app:layout_constraintStart_toStartOf="parent"
+-                    app:layout_constraintTop_toTopOf="parent">
+-
+-                    <TextView
+-                        android:id="@+id/scan_url"
+-                        android:layout_width="0dp"
+-                        android:layout_height="wrap_content"
+-                        android:layout_marginTop="16dp"
+-                        android:layout_marginBottom="16dp"
+-                        android:fontFamily="@font/product_sans"
+-                        android:text="Start ShareX First!"
+-                        android:textAlignment="center"
+-                        android:textColor="@color/txt_color"
+-                        android:textSize="16sp"
+-                        android:textStyle="bold"
+-                        app:layout_constraintBottom_toBottomOf="parent"
+-                        app:layout_constraintEnd_toStartOf="@+id/url_cpy_btn"
+-                        app:layout_constraintHorizontal_bias="0.0"
+-                        app:layout_constraintStart_toStartOf="parent"
+-                        app:layout_constraintTop_toTopOf="parent"
+-                        app:layout_constraintVertical_bias="0.524" />
+-
+-                    <ImageButton
+-                        android:id="@+id/url_share_btn"
+-                        android:layout_width="wrap_content"
+-                        android:layout_height="wrap_content"
+-                        android:layout_marginEnd="4dp"
+-                        android:background="@drawable/ripple_bg"
+-                        android:minWidth="48dp"
+-                        android:minHeight="48dp"
+-                        android:padding="10dp"
+-                        app:layout_constraintBottom_toBottomOf="parent"
+-                        app:layout_constraintEnd_toEndOf="parent"
+-                        app:layout_constraintTop_toTopOf="parent"
+-                        app:srcCompat="@drawable/ic_share"
+-                        app:tint="@color/txt_color" />
+-
+-                    <ImageButton
+-                        android:id="@+id/url_cpy_btn"
+-                        android:layout_width="wrap_content"
+-                        android:layout_height="wrap_content"
+-                        android:background="@drawable/ripple_bg"
+-                        android:minWidth="48dp"
+-                        android:minHeight="48dp"
+-                        android:padding="10dp"
+-                        app:layout_constraintBottom_toBottomOf="parent"
+-                        app:layout_constraintEnd_toStartOf="@+id/url_share_btn"
+-                        app:layout_constraintTop_toTopOf="parent"
+-                        app:layout_constraintVertical_bias="0.428"
+-                        app:srcCompat="?attr/actionModeCopyDrawable"
+-                        app:tint="@color/txt_color" />
+-                </androidx.constraintlayout.widget.ConstraintLayout>
+-
+-                <TextView
+-                    android:id="@+id/textView3"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:layout_marginStart="8dp"
+-                    android:layout_marginTop="8dp"
+-                    android:layout_marginEnd="8dp"
+-                    android:layout_marginBottom="16dp"
+-                    android:fontFamily="@font/product_sans"
+-                    android:text="@string/note"
+-                    android:textAlignment="center"
+-                    android:textColor="@color/txt_color"
+-                    app:layout_constraintBottom_toBottomOf="parent"
+-                    app:layout_constraintEnd_toEndOf="parent"
+-                    app:layout_constraintHorizontal_bias="0.0"
+-                    app:layout_constraintStart_toStartOf="parent"
+-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+-
+-            </androidx.constraintlayout.widget.ConstraintLayout>
+-        </androidx.constraintlayout.widget.ConstraintLayout>
+-    </androidx.cardview.widget.CardView>
+-
+-</androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 1355603..5f4836f 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -3,7 +3,7 @@
+     <string name="header_end">X</string>
+     <string name="ver">v2.3.6</string>
+     <string name="sutitle">By Akansh Sirohi</string>
+-    <string name="instructions">1) Turn on this device hotspot or connect to any other hotspot.\n2) Push START button and click on QR Code button to see the url or QR Code to scan.\n3) Scan that Qr code with any QR scanner app or enter the url in another device and start sharing files!\n\nNOTE:-\n 1) You can use Private Mode Setting to select and share only limited files.\n 2) This app completely works offline, no internet is used for file sharing.</string>
++    <string name="instructions">1) Turn on this device hotspot or connect to any other hotspot.\n2) Push START button.\n3) Enter the url (in the log) in another device and start sharing files!\n\nNOTE:-\n 1) You can use Private Mode Setting to select and share only limited files.\n 2) This app completely works offline, no internet is used for file sharing.</string>
+     <string name="note">Another device should be on same network or connected with your device hotspot.</string>
+     <string name="font_ps">fonts/product_sans.ttf</string>
+     <string name="open_drawer">Open Drawer</string>
+@@ -14,7 +14,7 @@
+ 
+     <string name="cd_start_stop_btn">Start or stop ShareX</string>
+     <string name="cd_bg">Background</string>
+-    <string name="cd_show_qr_btn">Show QR</string>
++    <!--<string name="cd_show_qr_btn">Show QR</string>-->
+     <string name="cd_toggle_logger">Toggle Log</string>
+     <string name="cd_open_navbar">Open Navigation Bar</string>
+ 
+-- 
+2.30.2
+
