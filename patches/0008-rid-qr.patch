@@ -21,7 +21,7 @@ index c5dec64..ee5a3be 100644
      testImplementation 'junit:junit:4.13.2'
      androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
-index a64b76f..95e70c3 100644
+index a64b76f..c71284d 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 +++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 @@ -65,15 +65,17 @@ import com.developer.filepicker.model.DialogConfigs;
@@ -43,7 +43,7 @@ index a64b76f..95e70c3 100644
  import com.zhihu.matisse.Matisse;
  import com.zhihu.matisse.MimeType;
  
-@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
+@@ -102,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
  
      private ProgressDialog progress;
      private String serverRoot = null;
@@ -51,8 +51,12 @@ index a64b76f..95e70c3 100644
 +    private ConstraintLayout settings_view, main_view, /*qr_view,*/ logger_wrapper; // meeksx - rid qr
      private TextView settDRoot, settRemDev, settTheme;
      private TextView logger;
-     private TextView scan_url;
-@@ -139,11 +141,11 @@ public class MainActivity extends AppCompatActivity {
+-    private TextView scan_url;
++    //private TextView scan_url;
+ 
+     //private ImageView main_bg,second_bg; // meeksx - clean bg
+     BroadcastReceiver updateUIReciver;
+@@ -139,15 +141,15 @@ public class MainActivity extends AppCompatActivity {
          serverBtn = findViewById(R.id.serverBtn);
          settings_view = findViewById(R.id.settings_view);
          main_view = findViewById(R.id.main_view);
@@ -67,6 +71,11 @@ index a64b76f..95e70c3 100644
          main_bg = findViewById(R.id.main_bg);
          second_bg = findViewById(R.id.second_bg);
  	*/ // meeksx end
+-        scan_url = findViewById(R.id.scan_url);
++        //scan_url = findViewById(R.id.scan_url);
+         drawerLayout = findViewById(R.id.root_container);
+ 
+         ImageButton nav_btn = findViewById(R.id.nav_btn);
 @@ -232,8 +234,10 @@ public class MainActivity extends AppCompatActivity {
              }
          };
