@@ -1,0 +1,1161 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 17 Mar 2023 01:48:02 +0000
+Subject: [PATCH] remove transfer history
+
+- i dont leave this thing on at night or sth lmao
+- even if theres a log if things were to go wrong it would ve been already
+- the log exista
+
+diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+index 12d8536..f4205d7 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
++++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+@@ -498,9 +498,11 @@ public class MainActivity extends AppCompatActivity {
+                     requestCameraPermission();
+                 }
+             */ // meeksx end
++            /* // meeksx - rid history
+             }else if(itemId == R.id.trans_hist) {
+                 Intent intent=new Intent(MainActivity.this,TransferHistory.class);
+                 startActivity(intent);
++            */ // meeksx end
+             }else if(itemId == R.id.clear_log) {
+                 clearLog();
+             }else if(itemId == R.id.privacy_policy) {
+diff --git a/app/src/main/java/com/akansh/fileserversuit/ServerUtils.java b/app/src/main/java/com/akansh/fileserversuit/ServerUtils.java
+index e5ea962..c900f5d 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/ServerUtils.java
++++ b/app/src/main/java/com/akansh/fileserversuit/ServerUtils.java
+@@ -11,7 +11,7 @@ import android.os.BatteryManager;
+ import android.os.Environment;
+ import android.util.Log;
+ 
+-import com.akansh.t_history.HistoryItem;
++//import com.akansh.t_history.HistoryItem; // meeksx - rid history
+ 
+ import java.io.BufferedReader;
+ import java.io.File;
+@@ -35,7 +35,7 @@ public class ServerUtils {
+     private final Context ctx;
+     Utils utils;
+     SendProgressListener sendProgressListener;
+-    UpdateTransferHistoryListener updateTransferHistoryListener;
++    //UpdateTransferHistoryListener updateTransferHistoryListener; // meeksx - rid history
+ 
+     public ServerUtils(Context ctx) {
+         this.ctx=ctx;
+@@ -48,9 +48,11 @@ public class ServerUtils {
+         this.sendProgressListener = sendProgressListener;
+     }
+ 
++    /* // meeksx - rid history
+     public void setUpdateTransferHistoryListener(UpdateTransferHistoryListener updateTransferHistoryListener) {
+         this.updateTransferHistoryListener = updateTransferHistoryListener;
+     }
++    */ // meeksx end
+ 
+     public String getFilesListCode(String path, boolean allowHiddenMedia) {
+         StringBuilder code=new StringBuilder();
+@@ -235,7 +237,7 @@ public class ServerUtils {
+         return output;
+     }
+ 
+-    public NanoHTTPD.Response serveFile(String path,boolean pushHistory,String rangeHeader) {
++    public NanoHTTPD.Response serveFile(String path,/*boolean pushHistory,*/ String rangeHeader) { // meeksx - rid history
+         NanoHTTPD.Response response;
+         try {
+             if(utils.loadSetting(Constants.PRIVATE_MODE)) {
+@@ -259,12 +261,14 @@ public class ServerUtils {
+                     }
+                 });
+                 response = newFixedLengthResponse(NanoHTTPD.Response.Status.OK, m, pis, b);
++		/* // meeksx - rid history
+                 if (pushHistory) {
+                     Calendar c = Calendar.getInstance();
+                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+                     SimpleDateFormat tf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                     updateTransferHistoryListener.onUpdateTransferHistory(new HistoryItem(Constants.ITEM_TYPE_SENT, name, fileSize(new File(path)), df.format(c.getTime()), tf.format(c.getTime()), m, new File(path).getAbsolutePath()));
+                 }
++		*/ // meeksx end
+             }else{
+                 String rangeValue = rangeHeader.trim().substring("bytes=".length());
+                 long fileLength = utils.getTotalBytes(path);
+@@ -317,7 +321,7 @@ public class ServerUtils {
+         }
+     }
+ 
+-    public NanoHTTPD.Response downloadFile(String path,boolean pCheck,boolean pushHistory,String rangeHeader) {
++    public NanoHTTPD.Response downloadFile(String path,boolean pCheck,/*boolean pushHistory,*/ String rangeHeader) { // meeksx - rid history
+         NanoHTTPD.Response response;
+         try {
+             if(pCheck) {
+@@ -339,12 +343,14 @@ public class ServerUtils {
+                     }
+                 });
+                 response = newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/octet-stream", pis, b);
++		/* // meeksx - rid history
+                 if (pushHistory) {
+                     Calendar c = Calendar.getInstance();
+                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+                     SimpleDateFormat tf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                     updateTransferHistoryListener.onUpdateTransferHistory(new HistoryItem(Constants.ITEM_TYPE_SENT, name, fileSize(new File(path)), df.format(c.getTime()), tf.format(c.getTime()), utils.getMimeType(new File(path)), new File(path).getAbsolutePath()));
+                 }
++		*/ // meeksx end
+             }else{
+                 String rangeValue = rangeHeader.trim().substring("bytes=".length());
+                 long fileLength = utils.getTotalBytes(path);
+@@ -400,7 +406,7 @@ public class ServerUtils {
+             Calendar c = Calendar.getInstance();
+             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+             SimpleDateFormat tf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+-            updateTransferHistoryListener.onUpdateTransferHistory(new HistoryItem(Constants.ITEM_TYPE_SENT, name, fileSize(new File(path)), df.format(c.getTime()), tf.format(c.getTime()), "Application",pkg));
++            //updateTransferHistoryListener.onUpdateTransferHistory(new HistoryItem(Constants.ITEM_TYPE_SENT, name, fileSize(new File(path)), df.format(c.getTime()), tf.format(c.getTime()), "Application",pkg)); // meeksx end
+         }catch (Exception e) {
+             return newFixedLengthResponse(e.getMessage());
+         }
+@@ -478,9 +484,11 @@ public class ServerUtils {
+         void onProgressUpdate(int progress);
+     }
+ 
++    /* // meeksx - rid history
+     public interface UpdateTransferHistoryListener {
+         void onUpdateTransferHistory(HistoryItem historyItem);
+     }
++    */ // meeksx end
+ 
+     private static class FilesComparator implements Comparator<File> {
+         public int compare(File lhs,File rhs) {
+diff --git a/app/src/main/java/com/akansh/fileserversuit/TransferHistory.java b/app/src/main/java/com/akansh/fileserversuit/TransferHistory.java
+deleted file mode 100644
+index 9402f8b..0000000
+--- a/app/src/main/java/com/akansh/fileserversuit/TransferHistory.java
++++ /dev/null
+@@ -1,256 +0,0 @@
+-package com.akansh.fileserversuit;
+-
+-import androidx.annotation.NonNull;
+-import androidx.appcompat.app.AlertDialog;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.appcompat.widget.Toolbar;
+-import androidx.constraintlayout.widget.ConstraintLayout;
+-import androidx.core.content.FileProvider;
+-import androidx.recyclerview.widget.ItemTouchHelper;
+-import androidx.recyclerview.widget.LinearLayoutManager;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+-import android.annotation.SuppressLint;
+-import android.content.DialogInterface;
+-import android.content.Intent;
+-import android.graphics.Color;
+-import android.graphics.Typeface;
+-import android.net.Uri;
+-import android.os.Build;
+-import android.os.Bundle;
+-import android.util.Log;
+-import android.view.Menu;
+-import android.view.MenuItem;
+-import android.view.View;
+-import android.widget.ImageButton;
+-import android.widget.TextView;
+-
+-import com.akansh.t_history.HistoryDBManager;
+-import com.akansh.t_history.HistoryItem;
+-import com.akansh.t_history.TransferHistoryAdapter;
+-import com.google.android.material.snackbar.Snackbar;
+-
+-import java.io.File;
+-import java.util.ArrayList;
+-
+-public class TransferHistory extends AppCompatActivity {
+-
+-    RecyclerView history_list;
+-
+-    TransferHistoryAdapter transferHistoryAdapter;
+-    HistoryDBManager historyDBManager;
+-    Utils utils;
+-    private int datasetLenth=0;
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_transfer_history);
+-//        Toolbar toolbar=findViewById(R.id.toolbar);
+-//        setSupportActionBar(toolbar);
+-//        getSupportActionBar().setTitle("Transfer History");
+-        historyDBManager=new HistoryDBManager(this);
+-        history_list = findViewById(R.id.history_list);
+-        ArrayList<HistoryItem> historyItems=historyDBManager.getHistory();
+-        datasetLenth = historyItems.size();
+-        if(datasetLenth>0) {
+-            showSnackbar("Swipe right to delete item...");
+-        }
+-        transferHistoryAdapter=new TransferHistoryAdapter(this,historyItems);
+-        history_list.setLayoutManager(new LinearLayoutManager(this));
+-        utils=new Utils(this);
+-        SwipeDeleteCallback swipeDeleteCallback=new SwipeDeleteCallback(this) {
+-            @Override
+-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+-                int pos=viewHolder.getAdapterPosition();
+-                HistoryItem historyItem=transferHistoryAdapter.getItem(pos);
+-                String path=historyItem.getPath();
+-                transferHistoryAdapter.removeItem(pos);
+-                historyDBManager.deleteHistory(path);
+-                showUndoSnackbar(historyItem,pos);
+-                checkEmptyList();
+-            }
+-        };
+-
+-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeDeleteCallback);
+-        itemTouchhelper.attachToRecyclerView(history_list);
+-
+-        transferHistoryAdapter.setHistoryActionListener(new TransferHistoryAdapter.HistoryActionListener() {
+-            @Override
+-            public void onClickItem(View v, int position) {
+-                try {
+-                    HistoryItem historyItem = transferHistoryAdapter.getItem(position);
+-                    File f = new File(historyItem.getPath());
+-                    if (f.isFile()) {
+-                        if(f.exists()) {
+-                            openFile(f.getAbsolutePath(), utils.getMimeType(f));
+-                        }else{
+-                            showSnackbar("File does not exist!");
+-                        }
+-                    }else{
+-                        showSnackbar("Folders or apps cannot be opened!");
+-                    }
+-                }catch (Exception e) {
+-                    showSnackbar("Can't open this file!");
+-                }
+-            }
+-
+-            @Override
+-            public void onDeleteItem(View v, int position) {
+-                final File f = new File(transferHistoryAdapter.getItem(position).getPath());
+-                if(f.isFile() && f.exists()) {
+-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+-                        @Override
+-                        public void onClick(DialogInterface dialog, int which) {
+-                            switch (which) {
+-                                case DialogInterface.BUTTON_POSITIVE:
+-                                    String path = transferHistoryAdapter.getItem(position).getPath();
+-                                    transferHistoryAdapter.removeItem(position);
+-                                    historyDBManager.deleteHistory(path);
+-                                    f.delete();
+-                                    checkEmptyList();
+-                                    break;
+-
+-                                case DialogInterface.BUTTON_NEGATIVE:
+-                                    //No button clicked
+-                                    break;
+-                            }
+-                        }
+-                    };
+-                    try {
+-                        AlertDialog dialog = new AlertDialog.Builder(TransferHistory.this).setMessage("This will delete this file from storage too, and this action can't be undone!\n\nAre you sure to delete this file?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+-                        TextView textView = dialog.findViewById(android.R.id.message);
+-                        TextView textView2 = dialog.findViewById(android.R.id.button1);
+-                        TextView textView3 = dialog.findViewById(android.R.id.button2);
+-                        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/product_sans.ttf");
+-                        textView.setTypeface(face);
+-                        textView2.setTypeface(face,Typeface.BOLD);
+-                        textView3.setTypeface(face,Typeface.BOLD);
+-                    }catch (Exception e) {
+-                        Log.d(Constants.LOG_TAG, "Dialog Error: " + e);
+-                    }
+-                }else{
+-                    String path = transferHistoryAdapter.getItem(position).getPath();
+-                    transferHistoryAdapter.removeItem(position);
+-                    historyDBManager.deleteHistory(path);
+-                    checkEmptyList();
+-                }
+-            }
+-
+-            @Override
+-            public void onShareItem(View v, int position) {
+-                try {
+-                    Uri uri;
+-                    File file = new File(transferHistoryAdapter.getItem(position).getPath());
+-                    if(file.isFile()) {
+-                        if(file.exists()) {
+-                            shareFile(file.getAbsolutePath(),utils.getMimeType(file));
+-                        }else{
+-                            showSnackbar("File does not exist!");
+-                        }
+-                    }else{
+-                        showSnackbar("Folders or apps cannot be shared!");
+-                    }
+-                }catch (Exception e) {
+-                    Log.d(Constants.LOG_TAG,e.toString());
+-                    showSnackbar("Can't share this file!");
+-                }
+-            }
+-        });
+-
+-        ImageButton btn_clear_hist = findViewById(R.id.btn_clear_hist);
+-        btn_clear_hist.setOnClickListener(v -> {
+-            if(transferHistoryAdapter.getItemCount()==0) {
+-                showSnackbar("No history found!");
+-            }else{
+-                historyDBManager.clearHistory();
+-                checkEmptyList();
+-                showSnackbar("Transfer history cleared!");
+-            }
+-        });
+-
+-        history_list.setAdapter(transferHistoryAdapter);
+-        init();
+-    }
+-
+-    @Override
+-    protected void onResume() {
+-        if(historyDBManager.getItemsCount()!=datasetLenth) {
+-            transferHistoryAdapter.updateDataset(historyDBManager.getHistory());
+-        }
+-        checkEmptyList();
+-        super.onResume();
+-    }
+-
+-    private void init() {
+-        checkEmptyList();
+-    }
+-
+-    public void checkEmptyList() {
+-        ConstraintLayout constraintLayout=findViewById(R.id.blank_screen);
+-        if(historyDBManager.getItemsCount()==0) {
+-            constraintLayout.setVisibility(View.VISIBLE);
+-            history_list.setVisibility(View.GONE);
+-        }else{
+-            constraintLayout.setVisibility(View.GONE);
+-            history_list.setVisibility(View.VISIBLE);
+-        }
+-    }
+-
+-    public void showSnackbar(String msg) {
+-        ConstraintLayout constraintLayout=findViewById(R.id.transfer_root);
+-        Snackbar snackbar = Snackbar.make(constraintLayout, msg, Snackbar.LENGTH_LONG);
+-        snackbar.setBackgroundTint(Color.parseColor("#000a12"));
+-//        TextView tv = (snackbar.getView()).findViewById(com.google.android.material.R.id.snackbar_text);
+-//        Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/product_sans.ttf");
+-//        tv.setTypeface(font);
+-        snackbar.show();
+-    }
+-
+-    @SuppressLint("NotifyDataSetChanged")
+-    public void showUndoSnackbar(final HistoryItem historyItem, final int position) {
+-        ConstraintLayout constraintLayout=findViewById(R.id.transfer_root);
+-        Snackbar snackbar = Snackbar.make(constraintLayout, "Item removed from history!", Snackbar.LENGTH_LONG);
+-        snackbar.setAction("Undo", v -> {
+-            historyDBManager.restoreHistory(historyItem);
+-            transferHistoryAdapter.updateDataset(historyDBManager.getHistory());
+-            history_list.scrollToPosition(position);
+-            transferHistoryAdapter.notifyDataSetChanged();
+-        });
+-        snackbar.setBackgroundTint(Color.parseColor("#000a12"));
+-//        TextView tv = (snackbar.getView()).findViewById(com.google.android.material.R.id.snackbar_text);
+-//        TextView action = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_action);
+-//        Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/product_sans.ttf");
+-//        tv.setTypeface(font);
+-//        action.setTypeface(font,Typeface.BOLD);
+-        snackbar.show();
+-    }
+-
+-    public void shareFile(String path,String type) {
+-        File file=new File(path);
+-        Uri uri;
+-        Intent i = new Intent(Intent.ACTION_SEND);
+-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+-            uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
+-            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+-        } else {
+-            uri = Uri.fromFile(file);
+-        }
+-        i.setDataAndType(uri, type);
+-        startActivity(Intent.createChooser(i,"Sharing file..."));
+-    }
+-
+-    public void openFile(String path,String type) {
+-        File file=new File(path);
+-        Uri uri;
+-        Intent i = new Intent(Intent.ACTION_VIEW);
+-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+-            uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
+-            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+-        } else {
+-            uri = Uri.fromFile(file);
+-        }
+-        i.setDataAndType(uri, type);
+-        startActivity(i);
+-    }
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/akansh/fileserversuit/WebServer.java b/app/src/main/java/com/akansh/fileserversuit/WebServer.java
+index 0600fe4..303a87f 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/WebServer.java
++++ b/app/src/main/java/com/akansh/fileserversuit/WebServer.java
+@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
+ import android.os.Environment;
+ import android.util.Log;
+ 
+-import com.akansh.t_history.HistoryDBManager;
++//import com.akansh.t_history.HistoryDBManager; // meeksx - rid history
+ 
+ import org.apache.commons.fileupload.FileItem;
+ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+@@ -30,7 +30,7 @@ public class WebServer extends NanoHTTPD {
+     private Utils utils;
+     private String root=Environment.getExternalStorageDirectory().getAbsolutePath();
+     private boolean allowHiddenMedia=true;
+-    private HistoryDBManager historyDBManager;
++    //private HistoryDBManager historyDBManager; // meeksx - rid history
+     private Context ctx;
+     private ServerUtils serverUtils;
+     private String c_parent = "";
+@@ -42,7 +42,7 @@ public class WebServer extends NanoHTTPD {
+ 
+     void setContext(Context context) {
+         utils=new Utils(context);
+-        historyDBManager=new HistoryDBManager(context);
++        //historyDBManager=new HistoryDBManager(context); // meeksx - rid history
+         ctx=context;
+         themesData = new ThemesData();
+         serverUtils = new ServerUtils(ctx);
+@@ -54,7 +54,7 @@ public class WebServer extends NanoHTTPD {
+             local.putExtra("value",progress);
+             ctx.sendBroadcast(local);
+         });
+-        serverUtils.setUpdateTransferHistoryListener(historyItem -> historyDBManager.addTransferHistory(historyItem.getItem_type(),historyItem.getFile_name(),historyItem.getSize(),historyItem.getDate(),historyItem.getTime(),historyItem.getType(),historyItem.getPath()));
++        //serverUtils.setUpdateTransferHistoryListener(historyItem -> historyDBManager.addTransferHistory(historyItem.getItem_type(),historyItem.getFile_name(),historyItem.getSize(),historyItem.getDate(),historyItem.getTime(),historyItem.getType(),historyItem.getPath())); // meeksx - rid history
+     }
+ 
+     public void setRoot(String root) {
+@@ -146,7 +146,7 @@ public class WebServer extends NanoHTTPD {
+                                     file = new File(jsonArray.getString(i));
+                                 }
+                                 if (file.exists()) {
+-                                    pushHistory(file,Constants.ITEM_TYPE_SENT);
++                                    //pushHistory(file,Constants.ITEM_TYPE_SENT); // meeksx - rid history
+                                     filesList.add(file);
+                                 }
+                             }
+@@ -252,7 +252,7 @@ public class WebServer extends NanoHTTPD {
+                                 } else if (mime.startsWith("video")) {
+                                     utils.verifyVideo(received);
+                                 }
+-                                pushHistory(received,Constants.ITEM_TYPE_RECEIVED);
++                                //pushHistory(received,Constants.ITEM_TYPE_RECEIVED); // meeksx - rid history
+                                 sendLog("msg", "msg", "File received: " + fileName);
+                                 len++;
+                             }
+@@ -315,6 +315,7 @@ public class WebServer extends NanoHTTPD {
+         ctx.sendBroadcast(local);
+     }
+ 
++    /* // meeksx - rid history
+     public void pushHistory(File f,int itemType) {
+         Calendar c = Calendar.getInstance();
+         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+@@ -325,4 +326,5 @@ public class WebServer extends NanoHTTPD {
+         }
+         historyDBManager.addTransferHistory(itemType,f.getName(),serverUtils.fileSize(f),df.format(c.getTime()),tf.format(c.getTime()),mime,f.getAbsolutePath());
+     }
++    */ // meeksx end
+ }
+diff --git a/app/src/main/java/com/akansh/t_history/HistoryDBHelper.java b/app/src/main/java/com/akansh/t_history/HistoryDBHelper.java
+deleted file mode 100644
+index ba2bcea..0000000
+--- a/app/src/main/java/com/akansh/t_history/HistoryDBHelper.java
++++ /dev/null
+@@ -1,107 +0,0 @@
+-package com.akansh.t_history;
+-
+-import android.content.ContentValues;
+-import android.content.Context;
+-import android.database.Cursor;
+-import android.database.DatabaseUtils;
+-import android.database.sqlite.SQLiteDatabase;
+-import android.database.sqlite.SQLiteOpenHelper;
+-
+-import java.util.HashMap;
+-
+-public class HistoryDBHelper extends SQLiteOpenHelper {
+-
+-    public static final String DATABASE_NAME="FSX_Hist.db";
+-    public static final String TABLE_NAME="T_HIST";
+-
+-    public static final String FILE_NAME="FILE_NAME";
+-    public static final String ITEM_TYPE="ITEM_TYPE";
+-    public static final String SIZE="SIZE";
+-    public static final String DATE="DATE_";
+-    public static final String TIME="TIME_";
+-    public static final String TYPE="TYPE";
+-    public static final String PATH="PATH";
+-
+-    public HistoryDBHelper(Context context) {
+-        super(context,DATABASE_NAME,null,1);
+-    }
+-
+-    @Override
+-    public void onCreate(SQLiteDatabase db) {
+-        db.execSQL("CREATE TABLE "+TABLE_NAME+" (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FILE_NAME TEXT NOT NULL,ITEM_TYPE TEXT NOT NULL,SIZE TEXT NOT NULL,DATE_ TEXT NOT NULL,TIME_ TEXT NOT NULL,TYPE TEXT NOT NULL,PATH TEXT NOT NULL)");
+-    }
+-
+-    @Override
+-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+-    }
+-
+-    public boolean insertData(HashMap<String,String> values) {
+-        SQLiteDatabase db=this.getWritableDatabase();
+-        ContentValues contentValues=new ContentValues();
+-        contentValues.put(FILE_NAME,values.get("file_name"));
+-        contentValues.put(ITEM_TYPE,Integer.parseInt(values.get("item_type")));
+-        contentValues.put(SIZE,values.get("size"));
+-        contentValues.put(DATE,values.get("date"));
+-        contentValues.put(TIME,values.get("time"));
+-        contentValues.put(TYPE,values.get("type"));
+-        contentValues.put(PATH,values.get("path"));
+-        long result=db.insert(TABLE_NAME,null,contentValues);
+-        if(result == -1) {
+-            return false;
+-        }else{
+-            return true;
+-        }
+-    }
+-
+-    public boolean restoreData(HashMap<String,String> values) {
+-        SQLiteDatabase db=this.getWritableDatabase();
+-        ContentValues contentValues=new ContentValues();
+-        contentValues.put("ID",Integer.parseInt(values.get("uid")));
+-        contentValues.put(FILE_NAME,values.get("file_name"));
+-        contentValues.put(ITEM_TYPE,Integer.parseInt(values.get("item_type")));
+-        contentValues.put(SIZE,values.get("size"));
+-        contentValues.put(DATE,values.get("date"));
+-        contentValues.put(TIME,values.get("time"));
+-        contentValues.put(TYPE,values.get("type"));
+-        contentValues.put(PATH,values.get("path"));
+-        long result=db.insert(TABLE_NAME,null,contentValues);
+-        if(result == -1) {
+-            return false;
+-        }else{
+-            return true;
+-        }
+-    }
+-
+-    public Cursor getData() {
+-        SQLiteDatabase db=this.getReadableDatabase();
+-        Cursor res=db.rawQuery("SELECT * FROM "+TABLE_NAME+" ORDER BY ID DESC", null);
+-        return res;
+-    }
+-
+-    public long getItemCount() {
+-        SQLiteDatabase db=this.getReadableDatabase();
+-        long count = DatabaseUtils.queryNumEntries(db,TABLE_NAME);
+-        return count;
+-    }
+-
+-    public void delete() {
+-        SQLiteDatabase db=this.getWritableDatabase();
+-        db.delete(TABLE_NAME,null,null);
+-    }
+-
+-    public void deleteOne(String path) {
+-        SQLiteDatabase db=this.getWritableDatabase();
+-        db.execSQL("DELETE FROM "+TABLE_NAME+" WHERE PATH='"+path+"'");
+-    }
+-
+-//    public boolean isFavExist(String url) {
+-//        SQLiteDatabase db=this.getReadableDatabase();
+-//        Cursor res=db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE URL='"+url+"'", null);
+-//        if(res.getCount()>0) {
+-//            return true;
+-//        }else{
+-//            return false;
+-//        }
+-//    }
+-}
+diff --git a/app/src/main/java/com/akansh/t_history/HistoryDBManager.java b/app/src/main/java/com/akansh/t_history/HistoryDBManager.java
+deleted file mode 100644
+index e235da5..0000000
+--- a/app/src/main/java/com/akansh/t_history/HistoryDBManager.java
++++ /dev/null
+@@ -1,63 +0,0 @@
+-package com.akansh.t_history;
+-
+-import android.content.Context;
+-import android.database.Cursor;
+-
+-import java.util.ArrayList;
+-import java.util.HashMap;
+-
+-public class HistoryDBManager {
+-    HistoryDBHelper historyDBHelper;
+-
+-    public HistoryDBManager(Context ctx) {
+-        historyDBHelper=new HistoryDBHelper(ctx);
+-    }
+-
+-    public void addTransferHistory(int item_type, String file_name, String size, String date, String time, String type, String path) {
+-        HashMap<String,String> values=new HashMap<>();
+-        values.put("file_name",file_name);
+-        values.put("item_type",String.valueOf(item_type));
+-        values.put("size",size);
+-        values.put("date",date);
+-        values.put("time",time);
+-        values.put("type",type);
+-        values.put("path",path);
+-        historyDBHelper.insertData(values);
+-    }
+-
+-    public ArrayList<HistoryItem> getHistory() {
+-        ArrayList<HistoryItem> historyItems=new ArrayList<>();
+-        Cursor cursor=historyDBHelper.getData();
+-        while(cursor.moveToNext()) {
+-            HistoryItem item=new HistoryItem(Integer.parseInt(cursor.getString(2)),cursor.getString(1),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7));
+-            item.setUid(cursor.getInt(0));
+-            historyItems.add(item);
+-        }
+-        return historyItems;
+-    }
+-
+-    public void restoreHistory(HistoryItem historyItem) {
+-        HashMap<String,String> values=new HashMap<>();
+-        values.put("uid",String.valueOf(historyItem.getUid()));
+-        values.put("file_name",historyItem.getFile_name());
+-        values.put("item_type",String.valueOf(historyItem.getItem_type()));
+-        values.put("size",historyItem.getSize());
+-        values.put("date",historyItem.getDate());
+-        values.put("time",historyItem.getTime());
+-        values.put("type",historyItem.getType());
+-        values.put("path",historyItem.getPath());
+-        historyDBHelper.restoreData(values);
+-    }
+-
+-    public int getItemsCount() {
+-        return (int) historyDBHelper.getItemCount();
+-    }
+-
+-    public void deleteHistory(String path) {
+-        historyDBHelper.deleteOne(path);
+-    }
+-
+-    public void clearHistory() {
+-        historyDBHelper.delete();
+-    }
+-}
+diff --git a/app/src/main/java/com/akansh/t_history/HistoryItem.java b/app/src/main/java/com/akansh/t_history/HistoryItem.java
+deleted file mode 100644
+index bab7008..0000000
+--- a/app/src/main/java/com/akansh/t_history/HistoryItem.java
++++ /dev/null
+@@ -1,59 +0,0 @@
+-package com.akansh.t_history;
+-
+-public class HistoryItem {
+-
+-    // Data Items
+-    private int item_type;
+-    private String
+-            file_name, size,
+-            date, time,
+-            type, path;
+-    private int uid;
+-
+-    // Constructor
+-    public HistoryItem(int item_type, String file_name, String size, String date, String time, String type, String path) {
+-        this.item_type = item_type;
+-        this.file_name = file_name;
+-        this.size = size;
+-        this.date = date;
+-        this.time = time;
+-        this.type = type;
+-        this.path = path;
+-    }
+-
+-    public int getItem_type() {
+-        return item_type;
+-    }
+-
+-    public String getFile_name() {
+-        return file_name;
+-    }
+-
+-    public String getSize() {
+-        return size;
+-    }
+-
+-    public String getDate() {
+-        return date;
+-    }
+-
+-    public String getTime() {
+-        return time;
+-    }
+-
+-    public String getType() {
+-        return type;
+-    }
+-
+-    public String getPath() {
+-        return path;
+-    }
+-
+-    public int getUid() {
+-        return uid;
+-    }
+-
+-    public void setUid(int uid) {
+-        this.uid = uid;
+-    }
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/akansh/t_history/TransferHistoryAdapter.java b/app/src/main/java/com/akansh/t_history/TransferHistoryAdapter.java
+deleted file mode 100644
+index 6912107..0000000
+--- a/app/src/main/java/com/akansh/t_history/TransferHistoryAdapter.java
++++ /dev/null
+@@ -1,139 +0,0 @@
+-package com.akansh.t_history;
+-
+-import android.annotation.SuppressLint;
+-import android.content.Context;
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+-import android.widget.ImageButton;
+-import android.widget.ImageView;
+-import android.widget.TextView;
+-
+-import androidx.annotation.NonNull;
+-import androidx.constraintlayout.widget.ConstraintLayout;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+-import com.akansh.fileserversuit.Constants;
+-import com.akansh.fileserversuit.R;
+-
+-
+-
+-
+-
+-import java.util.ArrayList;
+-
+-public class TransferHistoryAdapter extends RecyclerView.Adapter<TransferHistoryAdapter.HistHolder> {
+-
+-    HistoryActionListener listener;
+-    Context ctx;
+-    LayoutInflater inflater;
+-    ArrayList<HistoryItem> historyItems;
+-
+-    public interface HistoryActionListener {
+-        void onClickItem(View v, int position);
+-        void onDeleteItem(View v,int position);
+-        void onShareItem(View v,int position);
+-    }
+-
+-    public TransferHistoryAdapter(Context ctx, ArrayList<HistoryItem> hItems) {
+-        inflater= LayoutInflater.from(ctx);
+-        this.ctx = ctx;
+-        this.historyItems = hItems;
+-    }
+-
+-    public class HistHolder extends RecyclerView.ViewHolder {
+-        public TextView textView_filename,textView_path,textView_type,textView_size,textView_dt_stamp;
+-        public ImageView imageView_icon;
+-        public ImageButton imageButton_del,imageButton_share;
+-        public ConstraintLayout click_panel;
+-
+-        public HistHolder(View view) {
+-            super(view);
+-            textView_filename = view.findViewById(R.id.hitem_filename);
+-            textView_path = view.findViewById(R.id.hitem_path);
+-            textView_type = view.findViewById(R.id.hitem_type);
+-            textView_size = view.findViewById(R.id.hitem_size);
+-            textView_dt_stamp = view.findViewById(R.id.hitem_dt_stamp);
+-            imageView_icon = view.findViewById(R.id.hitem_icon);
+-            imageButton_del = view.findViewById(R.id.hitem_del_btn);
+-            imageButton_share = view.findViewById(R.id.hitem_share_btn);
+-            click_panel = view.findViewById(R.id.click_panel);
+-            click_panel.setOnClickListener(new View.OnClickListener() {
+-                @Override
+-                public void onClick(View v) {
+-                    if(listener!=null) {
+-                        listener.onClickItem(v,getAdapterPosition());
+-                    }
+-                }
+-            });
+-            imageButton_del.setOnClickListener(new View.OnClickListener() {
+-                @Override
+-                public void onClick(View v) {
+-                    listener.onDeleteItem(v,getAdapterPosition());
+-                }
+-            });
+-            imageButton_share.setOnClickListener(new View.OnClickListener() {
+-                @Override
+-                public void onClick(View v) {
+-                    listener.onShareItem(v,getAdapterPosition());
+-                }
+-            });
+-        }
+-    }
+-
+-    @SuppressLint("ClickableViewAccessibility")
+-    @Override
+-    public void onBindViewHolder(@NonNull HistHolder holder, int position) {
+-        HistoryItem historyItem=this.historyItems.get(position);
+-        holder.textView_filename.setText(historyItem.getFile_name());
+-        holder.textView_path.setText(historyItem.getPath());
+-        holder.textView_size.setText("Size: "+historyItem.getSize());
+-        holder.textView_type.setText("Type: "+historyItem.getType());
+-        holder.textView_dt_stamp.setText(historyItem.getDate()+" | "+historyItem.getTime());
+-        if(historyItem.getItem_type()== Constants.ITEM_TYPE_RECEIVED) {
+-            holder.imageView_icon.setImageResource(R.drawable.ic_receive);
+-        }else{
+-            holder.imageView_icon.setImageResource(R.drawable.ic_send);
+-        }
+-    }
+-
+-    @NonNull
+-    @Override
+-    public HistHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+-        View v=inflater.inflate(R.layout.trans_hist_item,parent,false);
+-        return new HistHolder(v);
+-    }
+-
+-    @Override
+-    public int getItemCount() {
+-        return historyItems.size();
+-    }
+-
+-    public void setHistoryActionListener(HistoryActionListener listener) {
+-        this.listener = listener;
+-    }
+-
+-    public void updateDataset(ArrayList<HistoryItem> hItems) {
+-        historyItems = hItems;
+-        notifyDataSetChanged();
+-    }
+-
+-    public void removeItem(int position) {
+-        historyItems.remove(position);
+-        notifyDataSetChanged();
+-    }
+-
+-    public HistoryItem getItem(int position) {
+-        return historyItems.get(position);
+-    }
+-
+-    public void addItem(HistoryItem hitem) {
+-        historyItems.add(historyItems.size(), hitem);
+-        notifyDataSetChanged();
+-    }
+-
+-    public void removeAllItems() {
+-        historyItems.clear();
+-        notifyDataSetChanged();
+-    }
+-}
+diff --git a/app/src/main/res/drawable/ic_history.xml b/app/src/main/res/drawable/ic_history.xml
+deleted file mode 100644
+index 98a8216..0000000
+--- a/app/src/main/res/drawable/ic_history.xml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-<vector android:height="24dp" android:tint="#FFFFFF"
+-    android:viewportHeight="24" android:viewportWidth="24"
+-    android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+-    <path android:fillColor="@android:color/white" android:pathData="M13,3c-4.97,0 -9,4.03 -9,9L1,12l3.89,3.89 0.07,0.14L9,12L6,12c0,-3.87 3.13,-7 7,-7s7,3.13 7,7 -3.13,7 -7,7c-1.93,0 -3.68,-0.79 -4.94,-2.06l-1.42,1.42C8.27,19.99 10.51,21 13,21c4.97,0 9,-4.03 9,-9s-4.03,-9 -9,-9zM12,8v5l4.28,2.54 0.72,-1.21 -3.5,-2.08L13.5,8L12,8z"/>
+-</vector>
+diff --git a/app/src/main/res/layout/activity_transfer_history.xml b/app/src/main/res/layout/activity_transfer_history.xml
+deleted file mode 100644
+index 0deb6be..0000000
+--- a/app/src/main/res/layout/activity_transfer_history.xml
++++ /dev/null
+@@ -1,116 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:id="@+id/transfer_root"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    android:background="@color/bg_color"
+-    tools:context=".TransferHistory">
+-
+-
+-    <androidx.constraintlayout.widget.ConstraintLayout
+-        android:id="@+id/constraintLayout2"
+-        android:layout_width="match_parent"
+-        android:layout_height="0dp"
+-        android:background="@color/bg_color_header"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent">
+-
+-        <TextView
+-            android:id="@+id/textView15"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginStart="16dp"
+-            android:layout_marginTop="24dp"
+-            android:layout_marginBottom="24dp"
+-            android:fontFamily="@font/product_sans"
+-            android:text="History"
+-            android:textColor="@color/txt_color"
+-            android:textSize="34sp"
+-            app:layout_constraintBottom_toBottomOf="parent"
+-            app:layout_constraintStart_toStartOf="parent"
+-            app:layout_constraintTop_toTopOf="parent" />
+-
+-        <ImageButton
+-            android:id="@+id/btn_clear_hist"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginEnd="8dp"
+-            android:background="@drawable/ripple_bg"
+-            android:padding="10dp"
+-            app:layout_constraintBottom_toBottomOf="parent"
+-            app:layout_constraintEnd_toEndOf="parent"
+-            app:layout_constraintTop_toTopOf="parent"
+-            app:srcCompat="@drawable/ic_delete_swipe"
+-            app:tint="@color/txt_color" />
+-    </androidx.constraintlayout.widget.ConstraintLayout>
+-
+-    <androidx.recyclerview.widget.RecyclerView
+-        android:id="@+id/history_list"
+-        android:layout_width="0dp"
+-        android:layout_height="0dp"
+-        android:layout_marginStart="1dp"
+-        android:layout_marginEnd="1dp"
+-        android:background="@color/bg_color"
+-        android:visibility="visible"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+-
+-    </androidx.recyclerview.widget.RecyclerView>
+-
+-    <androidx.constraintlayout.widget.ConstraintLayout
+-        android:id="@+id/blank_screen"
+-        android:layout_width="match_parent"
+-        android:layout_height="0dp"
+-        android:background="@color/bg_color"
+-        android:visibility="visible"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+-
+-        <androidx.constraintlayout.widget.ConstraintLayout
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            app:layout_constraintBottom_toBottomOf="parent"
+-            app:layout_constraintEnd_toEndOf="parent"
+-            app:layout_constraintHorizontal_bias="0.496"
+-            app:layout_constraintStart_toStartOf="parent"
+-            app:layout_constraintTop_toTopOf="parent"
+-            app:layout_constraintVertical_bias="0.45">
+-
+-            <TextView
+-                android:id="@+id/textView9"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:fontFamily="@font/product_sans"
+-                android:text="No transfer history found..."
+-                android:textColor="@color/txt_color_secondary"
+-                android:textSize="20sp"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@+id/imageView4"
+-                app:layout_constraintVertical_bias="0.0" />
+-
+-            <ImageView
+-                android:id="@+id/imageView4"
+-                android:layout_width="150dp"
+-                android:layout_height="150dp"
+-                android:alpha="0.5"
+-                android:tint="@color/txt_color_secondary"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toTopOf="parent"
+-                app:layout_constraintVertical_bias="0.0"
+-                app:srcCompat="@drawable/ic_blank"
+-                tools:ignore="VectorDrawableCompat" />
+-        </androidx.constraintlayout.widget.ConstraintLayout>
+-
+-    </androidx.constraintlayout.widget.ConstraintLayout>
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/trans_hist_item.xml b/app/src/main/res/layout/trans_hist_item.xml
+deleted file mode 100644
+index 1f6895b..0000000
+--- a/app/src/main/res/layout/trans_hist_item.xml
++++ /dev/null
+@@ -1,144 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="wrap_content">
+-
+-    <androidx.cardview.widget.CardView
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        app:cardBackgroundColor="@color/bg_color"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        card_view:cardCornerRadius="3dp"
+-        card_view:cardElevation="2dp"
+-        card_view:cardUseCompatPadding="true">
+-
+-        <androidx.constraintlayout.widget.ConstraintLayout
+-            android:id="@+id/click_panel"
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:background="@drawable/ripple_bg_"
+-            android:clickable="true">
+-
+-            <ImageView
+-                android:id="@+id/hitem_icon"
+-                android:layout_width="35dp"
+-                android:layout_height="35dp"
+-                android:layout_marginStart="8dp"
+-                android:layout_marginTop="8dp"
+-                android:layout_marginBottom="8dp"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toTopOf="parent"
+-                app:srcCompat="@drawable/ic_send"
+-                tools:ignore="VectorDrawableCompat" />
+-
+-            <TextView
+-                android:id="@+id/hitem_filename"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="16dp"
+-                android:layout_marginTop="8dp"
+-                android:layout_marginEnd="8dp"
+-                android:ellipsize="middle"
+-                android:fontFamily="@font/product_sans"
+-                android:singleLine="true"
+-                android:text="Filename..."
+-                android:textColor="@color/txt_color"
+-                android:textSize="14sp"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toEndOf="@+id/hitem_icon"
+-                app:layout_constraintTop_toTopOf="parent" />
+-
+-            <TextView
+-                android:id="@+id/hitem_path"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_marginEnd="8dp"
+-                android:ellipsize="middle"
+-                android:fontFamily="@font/product_sans"
+-                android:singleLine="true"
+-                android:text="/storage/emulated/0"
+-                android:textColor="@color/txt_color_secondary"
+-                android:textSize="12sp"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="@+id/hitem_filename"
+-                app:layout_constraintTop_toBottomOf="@+id/hitem_filename" />
+-
+-            <TextView
+-                android:id="@+id/hitem_type"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_marginTop="2dp"
+-                android:layout_marginEnd="8dp"
+-                android:fontFamily="@font/product_sans"
+-                android:text="Type: image/png"
+-                android:textColor="@color/txt_color_secondary"
+-                android:textSize="12sp"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="@+id/hitem_path"
+-                app:layout_constraintTop_toBottomOf="@+id/hitem_path" />
+-
+-            <TextView
+-                android:id="@+id/hitem_size"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginTop="8dp"
+-                android:fontFamily="@font/product_sans"
+-                android:text="Size: 10.00 MB"
+-                android:textColor="@color/txt_color_secondary"
+-                android:textSize="12sp"
+-                app:layout_constraintStart_toStartOf="@+id/hitem_type"
+-                app:layout_constraintTop_toBottomOf="@+id/hitem_type" />
+-
+-            <TextView
+-                android:id="@+id/hitem_dt_stamp"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginTop="8dp"
+-                android:layout_marginBottom="8dp"
+-                android:fontFamily="@font/product_sans"
+-                android:text="12/07/2020 | 12:30 PM"
+-                android:textColor="@color/txt_color_secondary"
+-                android:textSize="12sp"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintStart_toStartOf="@+id/hitem_size"
+-                app:layout_constraintTop_toBottomOf="@+id/hitem_size" />
+-
+-            <ImageButton
+-                android:id="@+id/hitem_share_btn"
+-                android:layout_width="40dp"
+-                android:layout_height="40dp"
+-                android:background="@drawable/ripple_bg"
+-                android:padding="8dp"
+-                android:scaleType="fitCenter"
+-                android:tint="@color/txt_color_secondary"
+-                app:layout_constraintBottom_toBottomOf="@+id/hitem_del_btn"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintTop_toTopOf="@+id/hitem_del_btn"
+-                app:srcCompat="@drawable/ic_share"
+-                tools:ignore="VectorDrawableCompat" />
+-
+-            <ImageButton
+-                android:id="@+id/hitem_del_btn"
+-                android:layout_width="40dp"
+-                android:layout_height="40dp"
+-                android:background="@drawable/ripple_bg"
+-                android:padding="8dp"
+-                android:scaleType="fitCenter"
+-                android:tint="@color/txt_color_secondary"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintEnd_toStartOf="@+id/hitem_share_btn"
+-                app:layout_constraintTop_toBottomOf="@+id/hitem_type"
+-                app:layout_constraintVertical_bias="0.612"
+-                app:srcCompat="@drawable/ic_delete"
+-                tools:ignore="VectorDrawableCompat" />
+-
+-        </androidx.constraintlayout.widget.ConstraintLayout>
+-    </androidx.cardview.widget.CardView>
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/menu/menu.xml b/app/src/main/res/menu/menu.xml
+index 3e683cf..eb77d5d 100644
+--- a/app/src/main/res/menu/menu.xml
++++ b/app/src/main/res/menu/menu.xml
+@@ -5,11 +5,7 @@
+         android:id="@+id/settings"
+         android:icon="@drawable/ic_setting"
+         android:title="Settings" />
+-    <item
+-        android:id="@+id/trans_hist"
+-        android:icon="@drawable/ic_history"
+-        android:title="Transfer History" />
+-    <item
++   <item
+         android:id="@+id/clear_log"
+         android:icon="@drawable/ic_clear_log"
+         android:title="Clear Logs" />
+-- 
+2.30.2
+
