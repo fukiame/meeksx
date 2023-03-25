@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 17 Mar 2023 07:04:40 +0000
+Subject: [PATCH] flip debug constant
+
+
+diff --git a/app/src/main/java/com/akansh/fileserversuit/Constants.java b/app/src/main/java/com/akansh/fileserversuit/Constants.java
+index 43396a0..97a346a 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/Constants.java
++++ b/app/src/main/java/com/akansh/fileserversuit/Constants.java
+@@ -1,7 +1,7 @@
+ package com.akansh.fileserversuit;
+ 
+ public class Constants {
+-    public static final boolean DEBUG = true;
++    public static final boolean DEBUG = false;
+     public static final String LOG_TAG = "ASOFT";
+     public static final String APP_LOAD_F1 = "app_load_f1";
+     public static final String LOAD_HIDDEN_MEDIA = "load_hidden_media";
+-- 
+2.30.2
+

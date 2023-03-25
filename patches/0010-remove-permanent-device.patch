@@ -1,0 +1,136 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 17 Mar 2023 07:01:43 +0000
+Subject: [PATCH] remove permanent device
+
+DeviceManager kept intact for the next patch.
+
+diff --git a/app/src/main/java/com/akansh/fileserversuit/Constants.java b/app/src/main/java/com/akansh/fileserversuit/Constants.java
+index 97a346a..44defd1 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/Constants.java
++++ b/app/src/main/java/com/akansh/fileserversuit/Constants.java
+@@ -23,7 +23,7 @@ public class Constants {
+     public static final int ITEM_TYPE_SENT = 0;
+     public static final int ITEM_TYPE_RECEIVED = 1;
+     public static final int DEVICE_TYPE_TEMP = 0;
+-    public static final int DEVICE_TYPE_PERMANENT = 1;
++    //public static final int DEVICE_TYPE_PERMANENT = 1; // meeksx - remove permanent device
+     public static final int DEVICE_TYPE_DENIED = -1;
+ 
+     public static final String ACTION_STOP_SERVICE = "stop_server_service";
+diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+index 0cc1fb7..5dbeb7a 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
++++ b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
+@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
+     private ProgressDialog progress;
+     private String serverRoot = null;
+     private ConstraintLayout settings_view, main_view, /*qr_view,*/ logger_wrapper; // meeksx - rid qr
+-    private TextView settDRoot, settRemDev, settTheme;
++    private TextView settDRoot, /*settRemDev,*/ settTheme;
+     private TextView logger;
+     //private TextView scan_url;
+ 
+@@ -155,12 +155,15 @@ public class MainActivity extends AppCompatActivity {
+         ImageButton nav_btn = findViewById(R.id.nav_btn);
+         nav_btn.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+ 
++	// meeksx start - remove permanent device
+         //Settings Components
+         settDRoot = findViewById(R.id.sett_subtitle1);
+-        settRemDev = findViewById(R.id.sett_subtitle6);
++        //settRemDev = findViewById(R.id.sett_subtitle6);
+         settTheme = findViewById(R.id.sett_subtitle7);
++	/*
+         String dev_count = deviceManager.getRemDevices() + " devices remembered";
+         settRemDev.setText(dev_count);
++	*/ // meeks end
+         settTheme.setText(themesData.getDisplayItem(utils.loadInt(Constants.WEB_INTERFACE_THEME,0)));
+ 
+         currentTheme = utils.loadInt(Constants.WEB_INTERFACE_THEME,0);
+@@ -685,7 +688,7 @@ public class MainActivity extends AppCompatActivity {
+         CardView card3=findViewById(R.id.sett_card3);
+         CardView card4=findViewById(R.id.sett_card4);
+         CardView card5=findViewById(R.id.sett_card5);
+-        CardView card6=findViewById(R.id.sett_card6);
++        //CardView card6=findViewById(R.id.sett_card6); // meeksx - remove permanent device
+         CardView card7=findViewById(R.id.sett_card7);
+         CardView card8=findViewById(R.id.sett_card8);
+         CheckBox settHFCheck=findViewById(R.id.sett_hideF_checkBox);
+@@ -728,6 +731,7 @@ public class MainActivity extends AppCompatActivity {
+         });
+         settPMCheck.setChecked(utils.loadSetting(Constants.PRIVATE_MODE));
+         card5.setOnClickListener(v -> settPMCheck.setChecked(!settPMCheck.isChecked()));
++	/* // meeksx - remove permanent device
+         card6.setOnClickListener(v -> {
+             deviceManager.clearAll();
+             showSnackbar("All remembered devices cleared!");
+@@ -739,6 +743,7 @@ public class MainActivity extends AppCompatActivity {
+                 }
+             },500);
+         });
++	*/ // meeksx end
+         card7.setOnClickListener(v -> {
+             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+             builder.setTitle("Choose Theme");
+@@ -1145,10 +1150,13 @@ public class MainActivity extends AppCompatActivity {
+                 case DialogInterface.BUTTON_NEGATIVE:
+                     deviceManager.addDevice(device_id,Constants.DEVICE_TYPE_DENIED);
+                     break;
++		/* // meeksx - remove permanent device
+                 case DialogInterface.BUTTON_NEUTRAL:
+                     deviceManager.addDevice(device_id,Constants.DEVICE_TYPE_PERMANENT);
+                     break;
++		*/ // meeksx end
+             }
++	    /* // meeksx - remove permanent device
+             Timer myTimer=new Timer();
+             myTimer.schedule(new TimerTask() {
+                 @Override
+@@ -1157,6 +1165,7 @@ public class MainActivity extends AppCompatActivity {
+                     MainActivity.this.runOnUiThread(() -> settRemDev.setText(count));
+                 }
+             },500);
++	    */ // meeksx end
+         };
+         if(!isAuthDialogOpened) {
+             isAuthDialogOpened=true;
+@@ -1165,7 +1174,7 @@ public class MainActivity extends AppCompatActivity {
+                         .setMessage("Incoming new device request!\nAre you sure to allow this device?")
+                         .setPositiveButton("Allow", dialogClickListener)
+                         .setNegativeButton("Don't Allow", dialogClickListener)
+-                        .setNeutralButton("Always allow this device", dialogClickListener)
++                        //.setNeutralButton("Always allow this device", dialogClickListener) // meeksx - remove permanent device
+                         .setTitle("Request Confirmation")
+                         //.setIcon(R.drawable.ic_logo) // meeksx - clean res
+                         .setCancelable(false).show();
+diff --git a/app/src/main/res/layout/settings_view.xml b/app/src/main/res/layout/settings_view.xml
+index e21321f..abdcc27 100644
+--- a/app/src/main/res/layout/settings_view.xml
++++ b/app/src/main/res/layout/settings_view.xml
+@@ -99,6 +99,7 @@
+             </androidx.constraintlayout.widget.ConstraintLayout>
+         </androidx.cardview.widget.CardView>
+ 
++	<!--
+         <androidx.cardview.widget.CardView
+             android:id="@+id/sett_card6"
+             android:layout_width="match_parent"
+@@ -152,6 +153,7 @@
+                     app:layout_constraintTop_toBottomOf="@+id/sett_title6" />
+             </androidx.constraintlayout.widget.ConstraintLayout>
+         </androidx.cardview.widget.CardView>
++	-->
+ 
+         <androidx.cardview.widget.CardView
+             android:id="@+id/sett_card7"
+@@ -520,4 +522,4 @@
+             android:layout_height="10dp" />
+ 
+     </LinearLayout>
+-</ScrollView>
+\ No newline at end of file
++</ScrollView>
+-- 
+2.30.2
+
