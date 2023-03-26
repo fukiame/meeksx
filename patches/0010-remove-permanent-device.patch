@@ -3,7 +3,6 @@ From: fukiame <fukiame@proton.me>
 Date: Fri, 17 Mar 2023 07:01:43 +0000
 Subject: [PATCH] remove permanent device
 
-DeviceManager kept intact for the next patch.
 
 diff --git a/app/src/main/java/com/akansh/fileserversuit/Constants.java b/app/src/main/java/com/akansh/fileserversuit/Constants.java
 index 97a346a..44defd1 100644
@@ -18,6 +17,24 @@ index 97a346a..44defd1 100644
      public static final int DEVICE_TYPE_DENIED = -1;
  
      public static final String ACTION_STOP_SERVICE = "stop_server_service";
+diff --git a/app/src/main/java/com/akansh/fileserversuit/DeviceManager.java b/app/src/main/java/com/akansh/fileserversuit/DeviceManager.java
+index 587d940..8afd68e 100644
+--- a/app/src/main/java/com/akansh/fileserversuit/DeviceManager.java
++++ b/app/src/main/java/com/akansh/fileserversuit/DeviceManager.java
+@@ -41,11 +41,13 @@ public class DeviceManager extends SQLiteOpenHelper {
+         }
+     }
+ 
++    /* // meeksx - remove permanent device
+     public int getRemDevices() {
+         SQLiteDatabase db=this.getReadableDatabase();
+         Cursor res=db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE DEVICE_TYPE == "+Constants.DEVICE_TYPE_PERMANENT, null);
+         return res.getCount();
+     }
++    */ // meeksx end
+ 
+     public boolean isDeviceExist(String id) {
+         SQLiteDatabase db=this.getReadableDatabase();
 diff --git a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java b/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
 index 0cc1fb7..5dbeb7a 100644
 --- a/app/src/main/java/com/akansh/fileserversuit/MainActivity.java
